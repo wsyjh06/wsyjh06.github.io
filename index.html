@@ -1,356 +1,385 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>数智童科启蒙团 - 用科技点亮乡村童年</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数智童科启蒙团 - 用科技点亮乡村童年</title>
 
-  <link href="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.staticfile.org/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.staticfile.org/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 
-  <style>
-    :root {
-      --primary-blue: #4A90E2;   /* 科技蓝 */
-      --growth-green: #7ED321;  /* 成长绿 */
-      --warm-yellow: #FFCE00;   /* 暖阳黄 */
-      --soft-bg: #F8FBFF;       /* 浅蓝色背景 */
-      --text-color: #4A4A4A;
-    }
+    <style>
+        :root {
+            --primary-blue: #4A90E2;   /* 科技蓝 */
+            --growth-green: #7ED321;  /* 成长绿 */
+            --warm-yellow: #FFCE00;   /* 暖阳黄 */
+            --soft-bg: #F8FBFF;       /* 浅蓝色背景 */
+            --text-color: #4A4A4A;
+        }
 
-    body {
-      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      background-color: var(--soft-bg);
-      color: var(--text-color);
-      scroll-behavior: smooth;
-    }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: var(--soft-bg);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
 
-    /* 导航栏样式 */
-    .navbar {
-      background-color: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      padding: 1rem 2rem;
-    }
-    .navbar-brand {
-      font-weight: bold;
-      color: var(--primary-blue) !important;
-      font-size: 1.5rem;
-    }
+        /* 导航栏样式 */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-blue) !important;
+            font-size: 1.5rem;
+        }
 
-    /* Banner 区域 */
-    .hero-section {
-      background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
-      padding: 100px 0;
-      color: white;
-      border-bottom-left-radius: 50px;
-      border-bottom-right-radius: 50px;
-      text-align: center;
-    }
-    .hero-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; }
-    .hero-subtitle { font-size: 1.2rem; opacity: 0.9; }
+        /* Banner 区域 */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
+            padding: 100px 0;
+            color: white;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            text-align: center;
+        }
+        .hero-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 1.2rem; opacity: 0.9; }
 
-    /* 通用卡片样式 */
-    .section-title {
-      text-align: center;
-      margin: 60px 0 40px;
-      position: relative;
-      padding-bottom: 15px;
-    }
-    .section-title::after {
-      content: '';
-      width: 50px;
-      height: 4px;
-      background: var(--warm-yellow);
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 2px;
-    }
+        /* 通用卡片样式 */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .section-title::after {
+            content: '';
+            width: 50px;
+            height: 4px;
+            background: var(--warm-yellow);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
 
-    /* 视频卡片 */
-    .video-card {
-      background: white;
-      border: none;
-      border-radius: 20px;
-      overflow: hidden;
-      transition: transform 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      margin-bottom: 30px;
-    }
-    .video-card:hover {
-      transform: translateY(-10px);
-    }
-    .video-thumb {
-      width: 100%;
-      height: 180px;
-      background-color: #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-    }
-    .play-icon {
-      font-size: 3rem;
-      color: white;
-      opacity: 0.8;
-    }
-    .video-info { padding: 20px; }
-    .category-tag {
-      font-size: 0.8rem;
-      background: var(--soft-bg);
-      color: var(--primary-blue);
-      padding: 2px 10px;
-      border-radius: 10px;
-    }
+        /* --- 视频区域：B站风格 + 展开收纳功能 --- */
+        .video-card {
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
 
-    /* 视频播放器模态框定制 */
-    .modal-content { border-radius: 20px; overflow: hidden; }
-    video { width: 100%; border-radius: 10px; background: #000; }
+        .video-thumb-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 强制 16:9 比例 */
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #e3e5e7;
+        }
 
-    /* 关于/介绍 区域 */
-    .about-box {
-      background: white;
-      padding: 40px;
-      border-radius: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-    }
+        .video-thumb-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
 
-    footer {
-      background: #333;
-      color: #ccc;
-      padding: 40px 0;
-      margin-top: 80px;
-    }
-    /*照片墙部分*/
-    .photo-wall-container {
-      width: 100%;
-      height: 400px; /* 控制显示区域高度 */
-      overflow: hidden;
-      position: relative;
-      border-radius: 20px;
-      background: #eee;
-      /* 顶部和底部的淡出遮罩，增加高级感 */
-      -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-      mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-    }
+        /* 悬停效果 */
+        .video-card:hover .video-thumb-img {
+            transform: scale(1.08);
+        }
 
-    /* 滚动轨道 */
-    .photo-track {
-      display: flex;
-      flex-direction: column;
-      animation: scrollVertical 20s linear infinite; /* 20秒走完一个循环 */
-    }
+        /* 标题：最多两行，超出省略 */
+        .video-title {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.4;
+            height: 42px;
+            color: #18191c;
+            margin: 10px 0 6px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: color 0.3s;
+        }
 
-    /* 鼠标悬停时暂停滚动 */
-    .photo-track:hover {
-      animation-play-state: paused;
-    }
+        .video-card:hover .video-title {
+            color: var(--primary-blue);
+        }
 
-    /* 单个图片容器 */
-    .photo-item {
-      width: 100%;
-      padding: 10px;
-    }
+        .video-meta {
+            display: flex;
+            font-size: 13px;
+            color: #9499a0;
+            align-items: center;
+        }
 
-    .photo-item img {
-      width: 100%;
-      height: 200px; /* 固定图片显示高度 */
-      object-fit: cover;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
+        /* 关键：控制隐藏视频的类 */
+        .video-item-hidden {
+            display: none !important;
+        }
 
-    .photo-item img:hover {
-      transform: scale(1.02);
-    }
+        /* 播放器模态框优化 */
+        .modal-content { border-radius: 20px; overflow: hidden; border: none; }
+        video { width: 100%; display: block; background: #000; }
 
-    /* 垂直滚动动画逻辑 */
-    @keyframes scrollVertical {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        /* 这里的位移量需根据图片数量调整，如果是4张图，则位移 -50% */
-        transform: translateY(-50%);
-      }
-    }
-  </style>
+
+        /* 关于/介绍 区域 */
+        .about-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        footer {
+            background: #333;
+            color: #ccc;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+        /*照片墙部分*/
+        .photo-wall-container {
+            width: 100%;
+            height: 400px; /* 控制显示区域高度 */
+            overflow: hidden;
+            position: relative;
+            border-radius: 20px;
+            background: #eee;
+            /* 顶部和底部的淡出遮罩，增加高级感 */
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+        }
+
+        /* 滚动轨道 */
+        .photo-track {
+            display: flex;
+            flex-direction: column;
+            animation: scrollVertical 20s linear infinite; /* 20秒走完一个循环 */
+        }
+
+        /* 鼠标悬停时暂停滚动 */
+        .photo-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* 单个图片容器 */
+        .photo-item {
+            width: 100%;
+            padding: 10px;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 200px; /* 固定图片显示高度 */
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item img:hover {
+            transform: scale(1.02);
+        }
+
+        /* 垂直滚动动画逻辑 */
+        @keyframes scrollVertical {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                /* 这里的位移量需根据图片数量调整，如果是4张图，则位移 -50% */
+                transform: translateY(-50%);
+            }
+        }
+    </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg sticky-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">💡 数智童科启蒙团</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">首页</a></li>
-        <li class="nav-item"><a class="nav-link" href="#videos">视频科普</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">项目介绍</a></li>
-        <li class="nav-item"><a class="nav-link" href="#team">关于我们</a></li>
-      </ul>
+    <div class="container">
+        <a class="navbar-brand" href="#">💡 数智童科启蒙团</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">首页</a></li>
+                <li class="nav-item"><a class="nav-link" href="#videos">视频科普</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">项目介绍</a></li>
+                <li class="nav-item"><a class="nav-link" href="#team">关于我们</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
 <section id="home" class="hero-section animate__animated animate__fadeIn">
-  <div class="container">
-    <h1 class="hero-title">用科技点亮乡村童年</h1>
-    <p class="hero-subtitle">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
-    <a href="#videos" class="btn btn-warning btn-lg rounded-pill mt-4 px-5 fw-bold">开始学习</a>
-  </div>
+    <div class="container">
+        <h1 class="hero-title">用科技点亮乡村童年</h1>
+        <p class="hero-subtitle">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
+        <a href="#videos" class="btn btn-warning btn-lg rounded-pill mt-4 px-5 fw-bold">开始学习</a>
+    </div>
 </section>
 
 <section id="videos" class="container mt-5">
-  <h2 class="section-title">科普视频课</h2>
+    <h2 class="section-title">科普视频课</h2>
 
-  <div class="d-flex justify-content-center mb-4 gap-2">
-    <button class="btn btn-outline-primary active btn-sm rounded-pill px-4">全部</button>
-    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">硬件基础</button>
-    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">编程启蒙</button>
-    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">网络安全</button>
-  </div>
+    <div class="d-flex justify-content-center mb-4 gap-2">
+        <button class="btn btn-outline-primary active btn-sm rounded-pill px-4">全部</button>
+        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">硬件基础</button>
+        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">编程启蒙</button>
+        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">网络安全</button>
+    </div>
 
-  <div class="row" id="videoListContainer">
-  </div>
-
-  <p class="text-center text-muted mt-3" style="font-size: 0.9rem;">
-    💡 温馨提示：检测到当前网络环境，建议在 Wi-Fi 下观看。点击视频可开启“节省流量”模式。
-  </p>
+    <div class="row" id="videoListContainer">
+    </div>
+    <div class="text-center mt-4">
+        <button id="moreBtn" class="btn btn-outline-primary rounded-pill px-5 py-2" onclick="toggleVideos()">
+            查看更多视频
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
+    <p class="text-center text-muted mt-3" style="font-size: 0.9rem;">
+        💡 温馨提示：检测到当前网络环境，建议在 Wi-Fi 下观看。点击视频可开启“节省流量”模式。
+    </p>
 </section>
 <!--我们是谁介绍部分-->
 <section id="about" class="container mt-5 py-5">
-  <div class="row align-items-center about-box mx-2">
-    <div class="col-md-6 mb-4 mb-md-0">
-      <div class="photo-wall-container">
-        <div class="photo-track">
-          <div class="photo-item"><img src="static/img/my.jpg" alt="活动1"></div>
-          <div class="photo-item"><img src="static/img/my.jpg" alt="活动2"></div>
-          <div class="photo-item"><img src="static/img/my.jpg" alt="活动3"></div>
-          <div class="photo-item"><img src="static/img/my.jpg" alt="活动4"></div>
+    <div class="row align-items-center about-box mx-2">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="photo-wall-container">
+                <div class="photo-track">
+                    <div class="photo-item"><img src="static/img/1.png" alt="活动1"></div>
+                    <div class="photo-item"><img src="static/img/2.png" alt="活动2"></div>
+                    <div class="photo-item"><img src="static/img/3.png" alt="活动3"></div>
+                    <div class="photo-item"><img src="static/img/child.png" alt="活动4"></div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="col-md-6 ps-md-5">
-      <h2 class="mb-4" style="color:var(--primary-blue)">我们是谁？</h2>
-      <p>“数智童科启蒙团”是一个专注于乡村儿童计算机科学素养提升的公益项目。我们发现，许多欠发达地区的校舍虽然配置了电脑，但孩子们缺乏系统的指引去理解科技。</p>
-      <p>我们通过制作通俗易懂的动画、组织线上互动教学，让复杂的二进制、算法、硬件知识变成孩子们眼中的“魔法”。</p>
-      <ul class="list-unstyled">
-        <li>✅ <strong>普及化：</strong> 零基础起步，适配儿童认知</li>
-        <li>✅ <strong>趣味化：</strong> 拒绝说教，寓教于乐</li>
-        <li>✅ <strong>持续性：</strong> 建立长期更新的资源库</li>
-      </ul>
+        <div class="col-md-6 ps-md-5">
+            <h2 class="mb-4" style="color:var(--primary-blue)">我们是谁？</h2>
+            <p>“数智童科启蒙团”是一个专注于乡村儿童计算机科学素养提升的公益项目。我们发现，许多欠发达地区的校舍虽然配置了电脑，但孩子们缺乏系统的指引去理解科技。</p>
+            <p>我们通过制作通俗易懂的动画、组织线上互动教学，让复杂的二进制、算法、硬件知识变成孩子们眼中的“魔法”。</p>
+            <ul class="list-unstyled">
+                <li>✅ <strong>普及化：</strong> 零基础起步，适配儿童认知</li>
+                <li>✅ <strong>趣味化：</strong> 拒绝说教，寓教于乐</li>
+                <li>✅ <strong>持续性：</strong> 建立长期更新的资源库</li>
+            </ul>
+        </div>
     </div>
-  </div>
 </section>
 <footer id="team">
-  <div class="container text-center">
-    <h4 class="text-white mb-4">联系我们</h4>
-    <p>如果您有任何建议或想加入我们，欢迎联系：</p>
-    <p class="mb-2">📧 邮箱：contact@shuzhitongke.org</p>
-    <p>📍 坐标：山东师范大学文淙楼1-221</p>
-    <hr class="bg-secondary my-4">
-    <p class="small">© 2025-2026 数智童科启蒙团 | 用心做科普，用爱传能量</p>
-  </div>
+    <div class="container text-center">
+        <h4 class="text-white mb-4">联系我们</h4>
+        <p>如果您有任何建议或想加入我们，欢迎联系：</p>
+        <p class="mb-2">📧 邮箱：contact@shuzhitongke.org</p>
+        <p>📍 坐标：山东师范大学文淙楼1-221</p>
+        <hr class="bg-secondary my-4">
+        <p class="small">© 2025-2026 数智童科启蒙团 | 用心做科普，用爱传能量</p>
+    </div>
 </footer>
 
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h5 class="modal-title" id="v-title">视频播放</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
-      </div>
-      <div class="modal-body p-0">
-        <video id="mainPlayer" controls poster="">
-          <source id="videoSource" src="" type="video/mp4">
-          您的浏览器不支持视频播放。
-        </video>
-      </div>
-      <div class="p-3 text-center">
-        <span class="badge bg-info">低流量模式已开启</span>
-      </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="v-title">视频播放</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
+            </div>
+            <div class="modal-body p-0">
+                <video id="mainPlayer" controls poster="">
+                    <source id="videoSource" src="" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+            <div class="p-3 text-center">
+                <span class="badge bg-info">低流量模式已开启</span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // 1. 预留视频数据接口（未来可通过 fetch 获取 JSON）
-  const videoData = [
-    {
-      id: 1,
-      title: "电脑是怎么‘说话’的？",
-      desc: "带你走进二进制的神奇世界，了解电脑如何处理信息。",
-      category: "计算机基础",
-      cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=60&w=400",
-      url: "https://www.w3schools.com/html/mov_bbb.mp4" // 示例视频地址
-    },
-    {
-      id: 2,
-      title: "小小程序员的第一步",
-      desc: "不用电脑也能学编程？揭秘什么是算法逻辑。",
-      category: "编程启蒙",
-      cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=60&w=400",
-      url: "https://www.w3schools.com/html/movie.mp4"
-    },
-    {
-      id: 3,
-      title: "拆开电脑看一看",
-      desc: "认识 CPU、内存和硬盘，看看电脑的大脑长什么样。",
-      category: "硬件认知",
-      cover: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=60&w=400",
-      url: "https://www.w3schools.com/html/mov_bbb.mp4"
+    // 假设你现在有很多视频数据
+    const videoData = [
+        { id: 1, title: "电脑是怎么‘说话’的？", cat: "基础", cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400", url: "#" },
+        { id: 2, title: "小小程序员的第一步", cat: "编程", cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400", url: "#" },
+        { id: 3, title: "拆开电脑看一看", cat: "硬件", cover: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=400", url: "#" },
+        { id: 4, title: "互联网是怎么连接的？", cat: "网络", cover: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400", url: "#" },
+        { id: 5, title: "人工智能是什么？", cat: "前沿", cover: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400", url: "#" },
+        { id: 6, title: "如何保护上网安全？", cat: "安全", cover: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400", url: "#" }
+    ];
+
+    let isExpanded = false; // 记录展开状态
+    const showLimit = 4;    // 默认显示的个数（一列4个）
+
+    function renderVideos() {
+        const container = document.getElementById('videoListContainer');
+
+        container.innerHTML = videoData.map((v, index) => {
+            // 如果索引大于等于限制数，且当前不是展开状态，则添加隐藏类
+            const hiddenClass = (index >= showLimit) ? 'video-item-hidden' : '';
+
+            return `
+        <div class="col-xl-3 col-lg-4 col-6 animate__animated animate__fadeIn ${hiddenClass}">
+          <div class="video-card" onclick="playVideo('${v.url}', '${v.title}')">
+            <div class="video-thumb-container">
+              <img src="${v.cover}" class="video-thumb-img" alt="${v.title}">
+              <div class="video-tag-bottom">科普精华</div>
+            </div>
+            <div class="video-info">
+              <div class="video-title">${v.title}</div>
+              <div class="video-meta">
+                <span class="me-3">1.2万播放</span>
+                <span>12-29</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+        }).join('');
     }
-  ];
 
-  // 2. 动态渲染视频列表
-  const container = document.getElementById('videoListContainer');
+    // 点击“更多”按钮的逻辑
+    function toggleVideos() {
+        const hiddenItems = document.querySelectorAll('.video-item-hidden');
+        const btn = document.getElementById('moreBtn');
 
-  function renderVideos() {
-    container.innerHTML = videoData.map(v => `
-                <div class="col-md-4 animate__animated animate__fadeInUp">
-                    <div class="video-card">
-                        <div class="video-thumb" onclick="playVideo('${v.url}', '${v.title}')" style="background: url('${v.cover}') center/cover;">
-                            <div class="play-icon">▶️</div>
-                        </div>
-                        <div class="video-info">
-                            <span class="category-tag">${v.category}</span>
-                            <h5 class="mt-2 mb-2">${v.title}</h5>
-                            <p class="small text-muted">${v.desc}</p>
-                            <button class="btn btn-sm btn-outline-primary w-100 rounded-pill" onclick="playVideo('${v.url}', '${v.title}')">立即观看</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-  }
+        if (!isExpanded) {
+            // 执行展开
+            hiddenItems.forEach(item => {
+                item.classList.remove('video-item-hidden');
+                item.classList.add('animate__fadeInUp'); // 增加一个向上的淡入动画
+            });
+            btn.innerHTML = '收起视频列表 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg>';
+            isExpanded = true;
+        } else {
+            // 执行收回，重新渲染即可回到初始状态
+            renderVideos();
+            btn.innerHTML = '查看更多视频 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>';
+            isExpanded = false;
+            // 收回后自动跳转到视频区域顶部，防止迷失
+            document.getElementById('videos').scrollIntoView();
+        }
+    }
 
-  // 3. 视频播放控制
-  const modal = new bootstrap.Modal(document.getElementById('videoModal'));
-  const player = document.getElementById('mainPlayer');
-  const vSource = document.getElementById('videoSource');
-  const vTitle = document.getElementById('v-title');
-
-  function playVideo(url, title) {
-    vTitle.innerText = title;
-    vSource.src = url;
-    player.load();
-    modal.show();
-    player.play();
-  }
-
-  function stopVideo() {
-    player.pause();
-  }
-
-  // 初始化
-  window.onload = renderVideos;
+    window.onload = renderVideos;
 </script>
 </body>
 </html>
