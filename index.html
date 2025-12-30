@@ -355,6 +355,39 @@
       `;
         }).join('');
     }
+    
+     // 播放视频函数（新增核心函数）
+    function playVideo(videoUrl, videoTitle, coverUrl) {
+        // 获取模态框和播放器元素
+        const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+        const videoTitleEl = document.getElementById('v-title');
+        const videoPlayer = document.getElementById('mainPlayer');
+        const videoSource = document.getElementById('videoSource');
+        
+        // 设置视频信息
+        videoTitleEl.textContent = videoTitle;
+        videoPlayer.poster = coverUrl; // 设置视频封面
+        videoSource.src = videoUrl;    // 设置视频地址
+        videoPlayer.load();            // 加载视频
+        
+        // 显示模态框
+        modal.show();
+        
+        // 浏览器要求用户交互后播放，这里模态框显示后手动触发播放（可选）
+        videoPlayer.oncanplay = () => {
+            // 如需自动播放，取消下面注释（部分浏览器需静音）
+            // videoPlayer.muted = true; 
+            // videoPlayer.play().catch(err => console.log('自动播放失败：', err));
+        };
+    }
+
+    // 停止视频函数（新增核心函数）
+    function stopVideo() {
+        const videoPlayer = document.getElementById('mainPlayer');
+        videoPlayer.pause();    // 暂停播放
+        videoPlayer.src = '';   // 清空视频源（防止音频继续播放）
+        videoPlayer.poster = '';// 清空封面
+    }
 
     // 点击“更多”按钮的逻辑
     function toggleVideos() {
