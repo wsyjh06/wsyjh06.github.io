@@ -262,9 +262,9 @@
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="photo-wall-container">
                 <div class="photo-track">
-                    <div class="photo-item"><img src="static/img/1.png" alt="活动1"></div>
-                    <div class="photo-item"><img src="static/img/2.png" alt="活动2"></div>
-                    <div class="photo-item"><img src="static/img/3.png" alt="活动3"></div>
+                    <div class="photo-item"><img src="static/img/x1.png" alt="活动1"></div>
+                    <div class="photo-item"><img src="static/img/x2.png" alt="活动2"></div>
+                    <div class="photo-item"><img src="static/img/x3.png" alt="活动3"></div>
                     <div class="photo-item"><img src="static/img/child.png" alt="活动4"></div>
                 </div>
             </div>
@@ -322,7 +322,7 @@
         { id: 2, title: "小小程序员的第一步", cat: "编程", cover: "static/img/cover2.png", url: "static/video/video(3).mp4" },
         { id: 3, title: "拆开电脑看一看", cat: "硬件", cover: "static/img/cover3.png", url: "static/video/video(4).mp4" },
         { id: 4, title: "互联网是怎么连接的？", cat: "网络", cover: "static/img/cover4.png", url: "static/video/video(5).mp4" },
-        { id: 5, title: "人工智能是什么？", cat: "前沿", cover: "static/img/cover5.png", url: "static/video/video(6).mp4" },
+        { id: 5, title: "人工智能是什么？", cat: "前沿", cover: "static/img/cover5.png", url: "static/video/video5.mp(6)" },
         { id: 6, title: "如何保护上网安全？", cat: "安全", cover: "static/img/cover6.png", url: "static/video/video(7).mp4" }
     ];
 
@@ -338,7 +338,7 @@
 
             return `
         <div class="col-xl-3 col-lg-4 col-6 animate__animated animate__fadeIn ${hiddenClass}">
-          <div class="video-card" onclick="playVideo('${v.url}', '${v.title}')">
+          <div class="video-card" onclick="playVideo('${v.url}', '${v.title}', '${v.cover}')">
             <div class="video-thumb-container">
               <img src="${v.cover}" class="video-thumb-img" alt="${v.title}">
               <div class="video-tag-bottom">科普精华</div>
@@ -356,37 +356,32 @@
         }).join('');
     }
     
-     // 播放视频函数（新增核心函数）
     function playVideo(videoUrl, videoTitle, coverUrl) {
-        // 获取模态框和播放器元素
-        const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+        const modalEl = document.getElementById('videoModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
         const videoTitleEl = document.getElementById('v-title');
         const videoPlayer = document.getElementById('mainPlayer');
         const videoSource = document.getElementById('videoSource');
-        
-        // 设置视频信息
+
         videoTitleEl.textContent = videoTitle;
-        videoPlayer.poster = coverUrl; // 设置视频封面
-        videoSource.src = videoUrl;    // 设置视频地址
-        videoPlayer.load();            // 加载视频
-        
-        // 显示模态框
+        videoPlayer.poster = coverUrl;
+        videoSource.src = videoUrl;
+
+        videoPlayer.load();
         modal.show();
-        
-        // 浏览器要求用户交互后播放，这里模态框显示后手动触发播放（可选）
-        videoPlayer.oncanplay = () => {
-            // 如需自动播放，取消下面注释（部分浏览器需静音）
-            // videoPlayer.muted = true; 
-            // videoPlayer.play().catch(err => console.log('自动播放失败：', err));
-        };
+
+        // 关键：真正触发播放
+        videoPlayer.play().catch(() => {});
     }
 
-    // 停止视频函数（新增核心函数）
     function stopVideo() {
         const videoPlayer = document.getElementById('mainPlayer');
-        videoPlayer.pause();    // 暂停播放
-        videoPlayer.src = '';   // 清空视频源（防止音频继续播放）
-        videoPlayer.poster = '';// 清空封面
+        const videoSource = document.getElementById('videoSource');
+
+        videoPlayer.pause();
+        videoSource.src = '';
+        videoPlayer.load();
     }
 
     // 点击“更多”按钮的逻辑
