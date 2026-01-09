@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数智童科启蒙团 - 编程小游戏</title>
+
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #4A90E2;
+            --growth-green: #7ED321;
+            --warm-yellow: #FFCE00;
+            --soft-bg: #F8FBFF;
+            --text-color: #4A4A4A;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: var(--soft-bg);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-blue) !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
+            color: white;
+            padding: 60px 0;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 50px;
+            height: 4px;
+            background: var(--warm-yellow);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* 游戏卡片样式 */
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.15);
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, var(--primary-blue), #3a7bc8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-body {
+            padding: 25px;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .game-desc {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .game-tag {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--primary-blue);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .game-btn {
+            background: linear-gradient(135deg, var(--primary-blue), #3a7bc8);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .game-btn:hover {
+            background: linear-gradient(135deg, #3a7bc8, var(--primary-blue));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        /* 游戏区域样式 */
+        .game-area {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px dashed rgba(74, 144, 226, 0.2);
+        }
+
+        .game-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+
+        .game-input {
+            border: 2px solid var(--primary-blue);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-run {
+            background: var(--growth-green);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .btn-reset {
+            background: var(--warm-yellow);
+            color: #333;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        /* 代码编辑器样式 */
+        .code-editor {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 15px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            resize: vertical;
+            border: 2px solid rgba(74, 144, 226, 0.3);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .game-card {
+                margin-bottom: 25px;
+            }
+
+            .game-body {
+                padding: 20px;
+            }
+
+            .hero-section {
+                padding: 40px 0;
+            }
+        }
+
+        /* 游戏特定样式 */
+        .tic-tac-toe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .tic-tac-toe-cell {
+            aspect-ratio: 1;
+            border: 3px solid var(--primary-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .tic-tac-toe-cell:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .tic-tac-toe-cell.x {
+            color: var(--primary-blue);
+        }
+
+        .tic-tac-toe-cell.o {
+            color: var(--growth-green);
+        }
+
+        .calculator-display {
+            background: #2d2d2d;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.8rem;
+            text-align: right;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            min-height: 60px;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+
+        .calc-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: #f0f0f0;
+            transition: all 0.2s;
+        }
+
+        .calc-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .calc-btn.operator {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .calc-btn.equals {
+            background: var(--growth-green);
+            color: white;
+        }
+
+        .calc-btn.clear {
+            background: var(--warm-yellow);
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="c.html">
+            <i class="fas fa-lightbulb me-2"></i>数智童科启蒙团
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="c.html#home">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="c.html#videos">视频科普</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="c.html#about">项目介绍</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="games.html">编程游戏</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 页面标题 -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">编程小游戏</h1>
+                <p class="lead mb-4">在浏览器中直接运行，无需下载安装！通过有趣的游戏学习编程思维，点击开始游戏按钮即可体验。</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <span class="badge bg-light text-dark px-3 py-2"><i class="fas fa-play-circle me-2"></i>在线运行</span>
+                    <span class="badge bg-light text-dark px-3 py-2"><i class="fas fa-code me-2"></i>无需下载</span>
+                    <span class="badge bg-light text-dark px-3 py-2"><i class="fas fa-graduation-cap me-2"></i>编程启蒙</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 游戏运行区域 -->
+<section id="gameSection" class="container py-5" style="display: none;">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="section-title" id="gameTitle">游戏运行区域</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div id="gameContainer" class="game-area">
+                <!-- 游戏内容将在这里动态加载 -->
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-secondary me-2" onclick="showGameList()">
+                    <i class="fas fa-arrow-left me-2"></i>返回游戏列表
+                </button>
+                <button class="btn btn-outline-primary" onclick="viewCode()">
+                    <i class="fas fa-code me-2"></i>查看代码
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 代码查看模态框 -->
+<div class="modal fade" id="codeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="codeModalTitle">游戏代码</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="codeContent" class="p-3 bg-dark text-white rounded" style="max-height: 400px; overflow-y: auto;"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 页脚 -->
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>数智童科启蒙团</h5>
+                <p class="text-white-50">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-1">📧 邮箱：contact@shuzhitongke.org</p>
+                <p class="mb-1">📍 坐标：山东师范大学文淙楼1-221</p>
+            </div>
+        </div>
+        <hr class="bg-secondary my-4">
+        <div class="text-center">
+            <p class="mb-0">© 2025-2026 数智童科启蒙团 | 用心做科普，用爱传能量</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // 当前加载的游戏
+    let currentGame = null;
+
+    // 加载游戏
+    function loadGame(gameName) {
+        // 隐藏游戏列表，显示游戏区域
+        document.querySelector('.hero-section').style.display = 'none';
+        document.querySelector('.container.py-5').style.display = 'none';
+        document.getElementById('gameSection').style.display = 'block';
+
+        // 清空游戏容器
+        const gameContainer = document.getElementById('gameContainer');
+        gameContainer.innerHTML = '';
+
+        // 设置游戏标题
+        const gameTitle = document.getElementById('gameTitle');
+
+        // 根据游戏名称加载不同的游戏
+        switch(gameName) {
+            case 'guessNumber':
+                currentGame = 'guessNumber';
+                gameTitle.textContent = '猜数字游戏';
+                loadGuessNumberGame();
+                break;
+            case 'ticTacToe':
+                currentGame = 'ticTacToe';
+                gameTitle.textContent = '井字棋';
+                loadTicTacToeGame();
+                break;
+            case 'calculator':
+                currentGame = 'calculator';
+                gameTitle.textContent = '简易计算器';
+                loadCalculatorGame();
+                break;
+            case 'wordChain':
+                currentGame = 'wordChain';
+                gameTitle.textContent = '单词接龙';
+                loadWordChainGame();
+                break;
+            case 'bankSystem':
+                currentGame = 'bankSystem';
+                gameTitle.textContent = '简易银行系统';
+                loadBankSystemGame();
+                break;
+            case 'rockPaperScissors':
+                currentGame = 'rockPaperScissors';
+                gameTitle.textContent = '猜拳游戏';
+                loadRockPaperScissorsGame();
+                break;
+        }
+
+        // 滚动到游戏区域
+        document.getElementById('gameSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 显示游戏列表
+    function showGameList() {
+        location.href = 'c.html#programming-games';   // 回到首页的编程游戏区域
+    }
+
+    // 查看代码
+    function viewCode() {
+        if (!currentGame) return;
+
+        const codeModal = new bootstrap.Modal(document.getElementById('codeModal'));
+        const codeContent = document.getElementById('codeContent');
+        const codeModalTitle = document.getElementById('codeModalTitle');
+
+        // 设置代码内容和标题
+        codeModalTitle.textContent = `${document.getElementById('gameTitle').textContent} - 代码`;
+
+        // 根据当前游戏加载对应的代码
+        let code = '';
+
+        switch(currentGame) {
+            case 'guessNumber':
+                code = guessNumberCode;
+                break;
+            case 'ticTacToe':
+                code = ticTacToeCode;
+                break;
+            case 'calculator':
+                code = calculatorCode;
+                break;
+            case 'wordChain':
+                code = wordChainCode;
+                break;
+            case 'bankSystem':
+                code = bankSystemCode;
+                break;
+            case 'rockPaperScissors':
+                code = rockPaperScissorsCode;
+                break;
+        }
+
+        codeContent.textContent = code;
+        codeModal.show();
+    }
+
+    // 游戏1: 猜数字游戏
+    function loadGuessNumberGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">猜数字游戏</h4>
+          <p class="mb-4">我已经想好了一个1到100之间的数字，试试看你能猜几次猜中！</p>
+
+          <div class="game-output" id="guessOutput">点击"开始游戏"按钮开始游戏！</div>
+
+          <div class="mt-4">
+            <input type="number" id="guessInput" class="game-input" placeholder="输入1-100之间的数字" min="1" max="100">
+          </div>
+
+          <div class="game-controls justify-content-center">
+            <button class="btn-run" onclick="startGuessNumber()">
+              <i class="fas fa-play me-2"></i>开始游戏
+            </button>
+            <button class="btn-reset" onclick="resetGuessNumber()">
+              <i class="fas fa-redo me-2"></i>重新开始
+            </button>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-muted"><small>💡 提示：输入数字后按Enter键也可以提交猜测</small></p>
+          </div>
+        </div>
+      `;
+
+        // 添加Enter键支持
+        document.getElementById('guessInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                makeGuess();
+            }
+        });
+    }
+
+    // 猜数字游戏变量
+    let secretNumber = 0;
+    let guessAttempts = 0;
+    let gameStarted = false;
+
+    function startGuessNumber() {
+        secretNumber = Math.floor(Math.random() * 100) + 1;
+        guessAttempts = 0;
+        gameStarted = true;
+
+        document.getElementById('guessOutput').innerHTML = '游戏开始！我已经想好了一个1-100之间的数字。<br>请输入你的猜测：';
+        document.getElementById('guessInput').value = '';
+        document.getElementById('guessInput').focus();
+
+        console.log('秘密数字:', secretNumber); // 调试用
+    }
+
+    function makeGuess() {
+        if (!gameStarted) {
+            document.getElementById('guessOutput').innerHTML = '请先点击"开始游戏"按钮！';
+            return;
+        }
+
+        const guessInput = document.getElementById('guessInput');
+        const guess = parseInt(guessInput.value);
+        const output = document.getElementById('guessOutput');
+
+        if (isNaN(guess) || guess < 1 || guess > 100) {
+            output.innerHTML += '<br>请输入1-100之间的有效数字！';
+            guessInput.value = '';
+            guessInput.focus();
+            return;
+        }
+
+        guessAttempts++;
+
+        if (guess < secretNumber) {
+            output.innerHTML += `<br>第${guessAttempts}次猜测：${guess} → <span class="text-primary">太小了！</span>`;
+        } else if (guess > secretNumber) {
+            output.innerHTML += `<br>第${guessAttempts}次猜测：${guess} → <span class="text-primary">太大了！</span>`;
+        } else {
+            output.innerHTML += `<br>第${guessAttempts}次猜测：${guess} → <span class="text-success fw-bold">恭喜！猜对了！</span>`;
+            output.innerHTML += `<br><span class="text-success">你用了 ${guessAttempts} 次猜中了数字 ${secretNumber}。</span>`;
+            gameStarted = false;
+        }
+
+        guessInput.value = '';
+        guessInput.focus();
+
+        // 滚动到输出底部
+        output.scrollTop = output.scrollHeight;
+    }
+
+    function resetGuessNumber() {
+        startGuessNumber();
+    }
+
+    // 游戏2: 井字棋
+    function loadTicTacToeGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">井字棋</h4>
+          <p class="mb-4">您使用X，计算机使用O。轮流在3x3的格子中下棋，先连成一条直线者获胜！</p>
+
+          <div class="tic-tac-toe-board" id="ticTacToeBoard"></div>
+
+          <div class="game-output mt-4" id="ticTacToeOutput">游戏准备开始！您先走。</div>
+
+          <div class="game-controls justify-content-center mt-4">
+            <button class="btn-run" onclick="startTicTacToe()">
+              <i class="fas fa-play me-2"></i>开始游戏
+            </button>
+            <button class="btn-reset" onclick="resetTicTacToe()">
+              <i class="fas fa-redo me-2"></i>重新开始
+            </button>
+          </div>
+        </div>
+      `;
+
+        startTicTacToe();
+    }
+
+    // 井字棋变量
+    let ticTacToeBoard = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    function startTicTacToe() {
+        ticTacToeBoard = ['', '', '', '', '', '', '', '', ''];
+        currentPlayer = 'X';
+        gameActive = true;
+
+        document.getElementById('ticTacToeOutput').textContent = '游戏开始！您先走（X）。';
+
+        renderTicTacToeBoard();
+    }
+
+    function renderTicTacToeBoard() {
+        const boardElement = document.getElementById('ticTacToeBoard');
+        boardElement.innerHTML = '';
+
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.className = `tic-tac-toe-cell ${ticTacToeBoard[i]}`;
+            cell.textContent = ticTacToeBoard[i];
+            cell.dataset.index = i;
+
+            if (ticTacToeBoard[i] === '' && gameActive) {
+                cell.addEventListener('click', () => handleTicTacToeCellClick(i));
+            }
+
+            boardElement.appendChild(cell);
+        }
+    }
+
+    function handleTicTacToeCellClick(index) {
+        if (!gameActive || ticTacToeBoard[index] !== '') return;
+
+        // 玩家下棋
+        ticTacToeBoard[index] = 'X';
+        renderTicTacToeBoard();
+
+        if (checkTicTacToeWinner('X')) {
+            document.getElementById('ticTacToeOutput').textContent = '恭喜！您赢了！';
+            gameActive = false;
+            return;
+        }
+
+        if (isTicTacToeBoardFull()) {
+            document.getElementById('ticTacToeOutput').textContent = '平局！游戏结束。';
+            gameActive = false;
+            return;
+        }
+
+        // 计算机下棋
+        setTimeout(() => {
+            if (!gameActive) return;
+
+            const emptyCells = ticTacToeBoard.reduce((acc, cell, idx) => {
+                if (cell === '') acc.push(idx);
+                return acc;
+            }, []);
+
+            if (emptyCells.length > 0) {
+                const randomIndex = Math.floor(Math.random() * emptyCells.length);
+                ticTacToeBoard[emptyCells[randomIndex]] = 'O';
+                renderTicTacToeBoard();
+
+                if (checkTicTacToeWinner('O')) {
+                    document.getElementById('ticTacToeOutput').textContent = '计算机赢了！再接再厉！';
+                    gameActive = false;
+                } else if (isTicTacToeBoardFull()) {
+                    document.getElementById('ticTacToeOutput').textContent = '平局！游戏结束。';
+                    gameActive = false;
+                }
+            }
+        }, 500);
+    }
+
+    function checkTicTacToeWinner(player) {
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // 行
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // 列
+            [0, 4, 8], [2, 4, 6] // 对角线
+        ];
+
+        return winPatterns.some(pattern =>
+            pattern.every(index => ticTacToeBoard[index] === player)
+        );
+    }
+
+    function isTicTacToeBoardFull() {
+        return ticTacToeBoard.every(cell => cell !== '');
+    }
+
+    function resetTicTacToe() {
+        startTicTacToe();
+    }
+
+    // 游戏3: 简易计算器
+    function loadCalculatorGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">简易计算器</h4>
+          <p class="mb-4">点击按钮进行计算，支持加减乘除运算。</p>
+
+          <div class="calculator-display" id="calcDisplay">0</div>
+
+          <div class="calculator-buttons">
+            <button class="calc-btn clear" onclick="clearCalculator()">C</button>
+            <button class="calc-btn" onclick="appendToCalculator('/')">/</button>
+            <button class="calc-btn" onclick="appendToCalculator('*')">×</button>
+            <button class="calc-btn" onclick="deleteLastCalculator()">⌫</button>
+
+            <button class="calc-btn" onclick="appendToCalculator('7')">7</button>
+            <button class="calc-btn" onclick="appendToCalculator('8')">8</button>
+            <button class="calc-btn" onclick="appendToCalculator('9')">9</button>
+            <button class="calc-btn operator" onclick="appendToCalculator('-')">-</button>
+
+            <button class="calc-btn" onclick="appendToCalculator('4')">4</button>
+            <button class="calc-btn" onclick="appendToCalculator('5')">5</button>
+            <button class="calc-btn" onclick="appendToCalculator('6')">6</button>
+            <button class="calc-btn operator" onclick="appendToCalculator('+')">+</button>
+
+            <button class="calc-btn" onclick="appendToCalculator('1')">1</button>
+            <button class="calc-btn" onclick="appendToCalculator('2')">2</button>
+            <button class="calc-btn" onclick="appendToCalculator('3')">3</button>
+            <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
+
+            <button class="calc-btn" onclick="appendToCalculator('0')" colspan="2">0</button>
+            <button class="calc-btn" onclick="appendToCalculator('.')">.</button>
+          </div>
+
+          <div class="game-output mt-4" id="calcOutput">点击按钮开始计算</div>
+        </div>
+      `;
+    }
+
+    // 计算器变量
+    let calcDisplay = '0';
+    let calcExpression = '';
+
+    function updateCalculatorDisplay() {
+        document.getElementById('calcDisplay').textContent = calcDisplay;
+    }
+
+    function appendToCalculator(value) {
+        if (calcDisplay === '0' && value !== '.') {
+            calcDisplay = value;
+        } else {
+            calcDisplay += value;
+        }
+
+        calcExpression += value;
+        updateCalculatorDisplay();
+    }
+
+    function clearCalculator() {
+        calcDisplay = '0';
+        calcExpression = '';
+        updateCalculatorDisplay();
+        document.getElementById('calcOutput').textContent = '已清除';
+    }
+
+    function deleteLastCalculator() {
+        if (calcDisplay.length > 1) {
+            calcDisplay = calcDisplay.slice(0, -1);
+            calcExpression = calcExpression.slice(0, -1);
+        } else {
+            calcDisplay = '0';
+            calcExpression = '';
+        }
+        updateCalculatorDisplay();
+    }
+
+    function calculateResult() {
+        try {
+            // 替换×为*用于计算
+            const expression = calcExpression.replace(/×/g, '*');
+            const result = eval(expression);
+
+            if (isNaN(result) || !isFinite(result)) {
+                document.getElementById('calcOutput').textContent = '错误：无效的计算';
+            } else {
+                calcDisplay = result.toString();
+                calcExpression = result.toString();
+                updateCalculatorDisplay();
+                document.getElementById('calcOutput').textContent = `计算完成：${expression} = ${result}`;
+            }
+        } catch (error) {
+            document.getElementById('calcOutput').textContent = '错误：表达式无效';
+        }
+    }
+
+    // 游戏4: 单词接龙
+    function loadWordChainGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">单词接龙</h4>
+          <p class="mb-4">英文单词接龙游戏。新单词的首字母必须和上一个单词的尾字母相同。</p>
+
+          <div class="game-output" id="wordChainOutput">游戏准备开始！请输入一个英文单词。</div>
+
+          <div class="mt-4">
+            <input type="text" id="wordInput" class="game-input" placeholder="输入一个英文单词">
+          </div>
+
+          <div class="game-controls justify-content-center">
+            <button class="btn-run" onclick="submitWord()">
+              <i class="fas fa-paper-plane me-2"></i>提交单词
+            </button>
+            <button class="btn-reset" onclick="startWordChain()">
+              <i class="fas fa-redo me-2"></i>重新开始
+            </button>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-muted"><small>💡 提示：输入单词后按Enter键也可以提交</small></p>
+          </div>
+        </div>
+      `;
+
+        // 添加Enter键支持
+        document.getElementById('wordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitWord();
+            }
+        });
+
+        startWordChain();
+    }
+
+    // 单词接龙变量
+    let lastWord = '';
+    let wordChainHistory = [];
+
+    function startWordChain() {
+        lastWord = '';
+        wordChainHistory = [];
+        document.getElementById('wordChainOutput').innerHTML = '游戏开始！请输入一个英文单词作为起始词。';
+        document.getElementById('wordInput').value = '';
+        document.getElementById('wordInput').focus();
+    }
+
+    function submitWord() {
+        const wordInput = document.getElementById('wordInput');
+        const word = wordInput.value.trim().toLowerCase();
+        const output = document.getElementById('wordChainOutput');
+
+        if (!word) {
+            output.innerHTML += '<br>请输入一个单词！';
+            return;
+        }
+
+        // 检查是否是英文单词（简单检查）
+        if (!/^[a-z]+$/.test(word)) {
+            output.innerHTML += '<br>请输入有效的英文单词（只包含字母）！';
+            wordInput.value = '';
+            wordInput.focus();
+            return;
+        }
+
+        if (lastWord === '') {
+            // 第一个单词
+            lastWord = word;
+            wordChainHistory.push(word);
+            output.innerHTML = `起始单词：<strong>${word}</strong><br>现在轮到计算机接龙...`;
+
+            // 计算机接龙
+            setTimeout(computerWordChain, 1000);
+        } else {
+            // 检查是否符合规则
+            const lastLetter = lastWord.charAt(lastWord.length - 1);
+
+            if (word.charAt(0) !== lastLetter) {
+                output.innerHTML += `<br>错误：新单词"${word}"必须以"${lastLetter}"开头！`;
+                wordInput.value = '';
+                wordInput.focus();
+                return;
+            }
+
+            if (wordChainHistory.includes(word)) {
+                output.innerHTML += `<br>错误：单词"${word}"已经使用过了！`;
+                wordInput.value = '';
+                wordInput.focus();
+                return;
+            }
+
+            // 玩家单词有效
+            lastWord = word;
+            wordChainHistory.push(word);
+            output.innerHTML += `<br>玩家：<strong>${word}</strong>`;
+
+            // 检查玩家是否赢了（计算机无法接龙）
+            const possibleWords = getPossibleWords(lastWord.charAt(lastWord.length - 1));
+            const availableWords = possibleWords.filter(w => !wordChainHistory.includes(w));
+
+            if (availableWords.length === 0) {
+                output.innerHTML += `<br><span class="text-success">恭喜！你赢了！计算机无法接龙。</span>`;
+                return;
+            }
+
+            // 计算机接龙
+            setTimeout(computerWordChain, 1000);
+        }
+
+        wordInput.value = '';
+        wordInput.focus();
+
+        // 滚动到输出底部
+        output.scrollTop = output.scrollHeight;
+    }
+
+    function computerWordChain() {
+        const output = document.getElementById('wordChainOutput');
+        const lastLetter = lastWord.charAt(lastWord.length - 1);
+        const possibleWords = getPossibleWords(lastLetter);
+        const availableWords = possibleWords.filter(w => !wordChainHistory.includes(w));
+
+        if (availableWords.length === 0) {
+            output.innerHTML += `<br><span class="text-success">恭喜！你赢了！计算机无法接龙。</span>`;
+            return;
+        }
+
+        // 随机选择一个单词
+        const randomIndex = Math.floor(Math.random() * availableWords.length);
+        const computerWord = availableWords[randomIndex];
+
+        lastWord = computerWord;
+        wordChainHistory.push(computerWord);
+
+        output.innerHTML += `<br>计算机：<strong>${computerWord}</strong>`;
+
+        // 检查计算机是否赢了（玩家无法接龙）
+        const nextPossibleWords = getPossibleWords(computerWord.charAt(computerWord.length - 1));
+        const nextAvailableWords = nextPossibleWords.filter(w => !wordChainHistory.includes(w));
+
+        if (nextAvailableWords.length === 0) {
+            output.innerHTML += `<br><span class="text-danger">计算机赢了！你无法接龙。</span>`;
+        }
+
+        // 滚动到输出底部
+        output.scrollTop = output.scrollHeight;
+    }
+
+    function getPossibleWords(startLetter) {
+        // 一个简单的单词列表
+        const wordLists = {
+            'a': ['apple', 'animal', 'about', 'after', 'again'],
+            'b': ['ball', 'book', 'baby', 'blue', 'because'],
+            'c': ['cat', 'car', 'cake', 'come', 'could'],
+            'd': ['dog', 'day', 'door', 'does', 'different'],
+            'e': ['egg', 'elephant', 'every', 'each', 'even'],
+            'f': ['fish', 'flower', 'from', 'first', 'friend'],
+            'g': ['game', 'girl', 'good', 'great', 'give'],
+            'h': ['house', 'happy', 'have', 'how', 'here'],
+            'i': ['ice', 'idea', 'into', 'if', 'important'],
+            'j': ['jump', 'juice', 'just', 'job', 'joy'],
+            'k': ['king', 'key', 'know', 'keep', 'kind'],
+            'l': ['lion', 'like', 'love', 'look', 'little'],
+            'm': ['mouse', 'mother', 'make', 'more', 'many'],
+            'n': ['nose', 'name', 'not', 'now', 'new'],
+            'o': ['orange', 'open', 'our', 'one', 'only'],
+            'p': ['pig', 'pencil', 'play', 'people', 'part'],
+            'q': ['queen', 'quick', 'question', 'quiet', 'quite'],
+            'r': ['rabbit', 'red', 'run', 'right', 'really'],
+            's': ['sun', 'school', 'see', 'say', 'some'],
+            't': ['tree', 'tiger', 'the', 'this', 'time'],
+            'u': ['umbrella', 'under', 'up', 'us', 'use'],
+            'v': ['violin', 'very', 'visit', 'view', 'voice'],
+            'w': ['water', 'window', 'we', 'what', 'when'],
+            'x': ['xylophone', 'x-ray'],
+            'y': ['yellow', 'you', 'year', 'yes', 'your'],
+            'z': ['zebra', 'zoo', 'zero', 'zone']
+        };
+
+        return wordLists[startLetter] || [];
+    }
+
+    // 游戏5: 简易银行系统
+    function loadBankSystemGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">简易银行系统</h4>
+          <p class="mb-4">模拟银行系统，您可以开户、存款、取款、查询余额。</p>
+
+          <div class="game-output" id="bankOutput">欢迎使用简易银行系统！</div>
+
+          <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+              <input type="number" id="bankAmount" class="game-input" placeholder="输入金额" min="1">
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="text" id="accountName" class="game-input" placeholder="账户名称">
+            </div>
+          </div>
+
+          <div class="game-controls justify-content-center flex-wrap">
+            <button class="btn btn-primary m-1" onclick="createAccount()">开户</button>
+            <button class="btn btn-success m-1" onclick="deposit()">存款</button>
+            <button class="btn btn-warning m-1" onclick="withdraw()">取款</button>
+            <button class="btn btn-info m-1" onclick="checkBalance()">查询余额</button>
+            <button class="btn btn-secondary m-1" onclick="resetBank()">重置系统</button>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-muted"><small>💡 提示：先创建账户，然后可以进行存款、取款操作</small></p>
+          </div>
+        </div>
+      `;
+
+        resetBank();
+    }
+
+    // 银行系统变量
+    let bankAccounts = {};
+    let currentAccount = null;
+
+    function resetBank() {
+        bankAccounts = {};
+        currentAccount = null;
+        document.getElementById('bankOutput').innerHTML = '银行系统已重置！请先创建账户。';
+        document.getElementById('accountName').value = '';
+        document.getElementById('bankAmount').value = '';
+    }
+
+    function createAccount() {
+        const accountName = document.getElementById('accountName').value.trim();
+        const output = document.getElementById('bankOutput');
+
+        if (!accountName) {
+            output.innerHTML = '请输入账户名称！';
+            return;
+        }
+
+        if (bankAccounts[accountName]) {
+            output.innerHTML = `账户"${accountName}"已存在！`;
+            return;
+        }
+
+        bankAccounts[accountName] = {
+            name: accountName,
+            balance: 0
+        };
+
+        currentAccount = accountName;
+        output.innerHTML = `账户"${accountName}"创建成功！初始余额：0元。`;
+    }
+
+    function deposit() {
+        if (!currentAccount) {
+            document.getElementById('bankOutput').innerHTML = '请先创建账户！';
+            return;
+        }
+
+        const amount = parseFloat(document.getElementById('bankAmount').value);
+
+        if (isNaN(amount) || amount <= 0) {
+            document.getElementById('bankOutput').innerHTML = '请输入有效的存款金额！';
+            return;
+        }
+
+        bankAccounts[currentAccount].balance += amount;
+        document.getElementById('bankOutput').innerHTML =
+            `存款成功！存入${amount}元。<br>账户"${currentAccount}"当前余额：${bankAccounts[currentAccount].balance}元。`;
+
+        document.getElementById('bankAmount').value = '';
+    }
+
+    function withdraw() {
+        if (!currentAccount) {
+            document.getElementById('bankOutput').innerHTML = '请先创建账户！';
+            return;
+        }
+
+        const amount = parseFloat(document.getElementById('bankAmount').value);
+
+        if (isNaN(amount) || amount <= 0) {
+            document.getElementById('bankOutput').innerHTML = '请输入有效的取款金额！';
+            return;
+        }
+
+        if (amount > bankAccounts[currentAccount].balance) {
+            document.getElementById('bankOutput').innerHTML =
+                `取款失败！余额不足。<br>账户"${currentAccount}"当前余额：${bankAccounts[currentAccount].balance}元。`;
+            return;
+        }
+
+        bankAccounts[currentAccount].balance -= amount;
+        document.getElementById('bankOutput').innerHTML =
+            `取款成功！取出${amount}元。<br>账户"${currentAccount}"当前余额：${bankAccounts[currentAccount].balance}元。`;
+
+        document.getElementById('bankAmount').value = '';
+    }
+
+    function checkBalance() {
+        if (!currentAccount) {
+            document.getElementById('bankOutput').innerHTML = '请先创建账户！';
+            return;
+        }
+
+        document.getElementById('bankOutput').innerHTML =
+            `账户"${currentAccount}"当前余额：${bankAccounts[currentAccount].balance}元。`;
+    }
+
+    // 游戏6: 猜拳游戏
+    function loadRockPaperScissorsGame() {
+        const gameContainer = document.getElementById('gameContainer');
+
+        gameContainer.innerHTML = `
+        <div class="text-center">
+          <h4 class="mb-4">猜拳游戏</h4>
+          <p class="mb-4">石头剪刀布游戏。您和计算机对战，三局两胜。</p>
+
+          <div class="game-output" id="rpsOutput">游戏准备开始！请选择您的出拳。</div>
+
+          <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+            <button class="btn btn-primary btn-lg p-4" onclick="playRound('rock')">
+              <i class="fas fa-hand-rock fa-2x mb-2"></i><br>石头
+            </button>
+            <button class="btn btn-success btn-lg p-4" onclick="playRound('paper')">
+              <i class="fas fa-hand-paper fa-2x mb-2"></i><br>布
+            </button>
+            <button class="btn btn-warning btn-lg p-4" onclick="playRound('scissors')">
+              <i class="fas fa-hand-scissors fa-2x mb-2"></i><br>剪刀
+            </button>
+          </div>
+
+          <div class="row mt-4 text-center">
+            <div class="col-md-6">
+              <h5>玩家</h5>
+              <div class="display-4" id="playerScore">0</div>
+            </div>
+            <div class="col-md-6">
+              <h5>计算机</h5>
+              <div class="display-4" id="computerScore">0</div>
+            </div>
+          </div>
+
+          <div class="game-controls justify-content-center mt-4">
+            <button class="btn-run" onclick="startRockPaperScissors()">
+              <i class="fas fa-play me-2"></i>开始游戏
+            </button>
+            <button class="btn-reset" onclick="resetRockPaperScissors()">
+              <i class="fas fa-redo me-2"></i>重新开始
+            </button>
+          </div>
+        </div>
+      `;
+
+        startRockPaperScissors();
+    }
+
+    // 猜拳游戏变量
+    let playerScore = 0;
+    let computerScore = 0;
+    let roundCount = 0;
+
+    function startRockPaperScissors() {
+        playerScore = 0;
+        computerScore = 0;
+        roundCount = 0;
+
+        document.getElementById('playerScore').textContent = '0';
+        document.getElementById('computerScore').textContent = '0';
+        document.getElementById('rpsOutput').textContent = '游戏开始！请选择您的出拳（石头、布或剪刀）。';
+    }
+
+    function resetRockPaperScissors() {
+        startRockPaperScissors();
+    }
+
+    function playRound(playerChoice) {
+        if (playerScore >= 2 || computerScore >= 2) {
+            return; // 游戏已结束
+        }
+
+        roundCount++;
+
+        // 计算机随机选择
+        const choices = ['rock', 'paper', 'scissors'];
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+        // 判断胜负
+        let result = '';
+
+        if (playerChoice === computerChoice) {
+            result = '平局！';
+        } else if (
+            (playerChoice === 'rock' && computerChoice === 'scissors') ||
+            (playerChoice === 'paper' && computerChoice === 'rock') ||
+            (playerChoice === 'scissors' && computerChoice === 'paper')
+        ) {
+            result = '你赢了这一局！';
+            playerScore++;
+        } else {
+            result = '计算机赢了这一局！';
+            computerScore++;
+        }
+
+        // 更新显示
+        document.getElementById('playerScore').textContent = playerScore;
+        document.getElementById('computerScore').textContent = computerScore;
+
+        // 翻译选择为中文
+        const choiceMap = {
+            'rock': '石头',
+            'paper': '布',
+            'scissors': '剪刀'
+        };
+
+        const playerChoiceCN = choiceMap[playerChoice];
+        const computerChoiceCN = choiceMap[computerChoice];
+
+        document.getElementById('rpsOutput').innerHTML =
+            `第${roundCount}局：<br>` +
+            `你出了 <strong>${playerChoiceCN}</strong>，计算机出了 <strong>${computerChoiceCN}</strong><br>` +
+            `<strong>${result}</strong>`;
+
+        // 检查游戏是否结束
+        if (playerScore >= 2) {
+            document.getElementById('rpsOutput').innerHTML += '<br><span class="text-success fw-bold">恭喜！你赢了游戏！</span>';
+        } else if (computerScore >= 2) {
+            document.getElementById('rpsOutput').innerHTML += '<br><span class="text-danger fw-bold">计算机赢了游戏！再接再厉！</span>';
+        }
+    }
+
+    // 游戏代码（用于代码查看）
+    const guessNumberCode = `// 猜数字游戏 - JavaScript代码
+function startGame() {
+  // 生成1-100的随机数
+  secretNumber = Math.floor(Math.random() * 100) + 1;
+  attempts = 0;
+  gameStarted = true;
+
+  console.log('秘密数字:', secretNumber); // 调试用
+  showMessage('游戏开始！我已经想好了一个1-100之间的数字。');
+}
+
+function makeGuess(guess) {
+  if (!gameStarted) {
+    showMessage('请先开始游戏！');
+    return;
+  }
+
+  attempts++;
+
+  if (guess < secretNumber) {
+    showMessage(\`第\${attempts}次猜测：\${guess} → 太小了！\`);
+  } else if (guess > secretNumber) {
+    showMessage(\`第\${attempts}次猜测：\${guess} → 太大了！\`);
+  } else {
+    showMessage(\`第\${attempts}次猜测：\${guess} → 恭喜！猜对了！\`);
+    showMessage(\`你用了 \${attempts} 次猜中了数字 \${secretNumber}。\`);
+    gameStarted = false;
+  }
+}
+
+// 游戏变量
+let secretNumber = 0;
+let attempts = 0;
+let gameStarted = false;`;
+
+    const ticTacToeCode = `// 井字棋游戏 - JavaScript代码
+class TicTacToe {
+  constructor() {
+    this.board = ['', '', '', '', '', '', '', '', ''];
+    this.currentPlayer = 'X';
+    this.gameActive = true;
+  }
+
+  // 渲染游戏板
+  renderBoard() {
+    const boardElement = document.getElementById('board');
+    boardElement.innerHTML = '';
+
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.textContent = this.board[i];
+      cell.dataset.index = i;
+
+      if (this.board[i] === '' && this.gameActive) {
+        cell.addEventListener('click', () => this.handleCellClick(i));
+      }
+
+      boardElement.appendChild(cell);
+    }
+  }
+
+  // 处理格子点击
+  handleCellClick(index) {
+    if (!this.gameActive || this.board[index] !== '') return;
+
+    // 玩家下棋
+    this.board[index] = this.currentPlayer;
+    this.renderBoard();
+
+    if (this.checkWinner('X')) {
+      this.showMessage('恭喜！你赢了！');
+      this.gameActive = false;
+      return;
+    }
+
+    if (this.isBoardFull()) {
+      this.showMessage('平局！游戏结束。');
+      this.gameActive = false;
+      return;
+    }
+
+    // 切换到计算机
+    this.currentPlayer = 'O';
+
+    // 计算机下棋
+    setTimeout(() => this.computerMove(), 500);
+  }
+
+  // 计算机移动
+  computerMove() {
+    if (!this.gameActive) return;
+
+    // 简单AI：随机选择空位
+    const emptyCells = this.board.reduce((acc, cell, idx) => {
+      if (cell === '') acc.push(idx);
+      return acc;
+    }, []);
+
+    if (emptyCells.length > 0) {
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      this.board[emptyCells[randomIndex]] = 'O';
+      this.renderBoard();
+
+      if (this.checkWinner('O')) {
+        this.showMessage('计算机赢了！');
+        this.gameActive = false;
+      } else if (this.isBoardFull()) {
+        this.showMessage('平局！游戏结束。');
+        this.gameActive = false;
+      }
+    }
+
+    // 切换回玩家
+    this.currentPlayer = 'X';
+  }
+
+  // 检查获胜者
+  checkWinner(player) {
+    const winPatterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // 行
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // 列
+      [0, 4, 8], [2, 4, 6] // 对角线
+    ];
+
+    return winPatterns.some(pattern =>
+      pattern.every(index => this.board[index] === player)
+    );
+  }
+
+  // 检查游戏板是否已满
+  isBoardFull() {
+    return this.board.every(cell => cell !== '');
+  }
+
+  showMessage(message) {
+    document.getElementById('message').textContent = message;
+  }
+}`;
+
+    const calculatorCode = `// 简易计算器 - JavaScript代码
+class Calculator {
+  constructor() {
+    this.display = '0';
+    this.expression = '';
+  }
+
+  // 更新显示
+  updateDisplay() {
+    document.getElementById('display').textContent = this.display;
+  }
+
+  // 添加数字或运算符
+  append(value) {
+    if (this.display === '0' && value !== '.') {
+      this.display = value;
+    } else {
+      this.display += value;
+    }
+
+    this.expression += value;
+    this.updateDisplay();
+  }
+
+  // 清除
+  clear() {
+    this.display = '0';
+    this.expression = '';
+    this.updateDisplay();
+  }
+
+  // 删除最后一个字符
+  deleteLast() {
+    if (this.display.length > 1) {
+      this.display = this.display.slice(0, -1);
+      this.expression = this.expression.slice(0, -1);
+    } else {
+      this.display = '0';
+      this.expression = '';
+    }
+    this.updateDisplay();
+  }
+
+  // 计算结果
+  calculate() {
+    try {
+      // 替换×为*用于计算
+      const expr = this.expression.replace(/×/g, '*');
+      const result = eval(expr);
+
+      if (isNaN(result) || !isFinite(result)) {
+        throw new Error('无效的计算');
+      }
+
+      this.display = result.toString();
+      this.expression = result.toString();
+      this.updateDisplay();
+
+      return result;
+    } catch (error) {
+      this.display = '错误';
+      this.expression = '';
+      this.updateDisplay();
+      throw error;
+    }
+  }
+}`;
+
+    const wordChainCode = `// 单词接龙游戏 - JavaScript代码
+class WordChain {
+  constructor() {
+    this.lastWord = '';
+    this.history = [];
+    this.words = {
+      'a': ['apple', 'animal', 'about', 'after', 'again'],
+      'b': ['ball', 'book', 'baby', 'blue', 'because'],
+      'c': ['cat', 'car', 'cake', 'come', 'could'],
+      // ... 更多单词
+    };
+  }
+
+  // 开始游戏
+  start() {
+    this.lastWord = '';
+    this.history = [];
+    return '游戏开始！请输入一个英文单词作为起始词。';
+  }
+
+  // 提交单词
+  submitWord(word) {
+    const lowerWord = word.toLowerCase();
+
+    // 验证单词
+    if (!/^[a-z]+$/.test(lowerWord)) {
+      return '请输入有效的英文单词（只包含字母）！';
+    }
+
+    if (this.lastWord === '') {
+      // 第一个单词
+      this.lastWord = lowerWord;
+      this.history.push(lowerWord);
+      return \`起始单词：\${word}\`;
+    } else {
+      // 检查是否符合规则
+      const lastLetter = this.lastWord.charAt(this.lastWord.length - 1);
+
+      if (lowerWord.charAt(0) !== lastLetter) {
+        return \`错误：新单词"\${word}"必须以"\${lastLetter}"开头！\`;
+      }
+
+      if (this.history.includes(lowerWord)) {
+        return \`错误：单词"\${word}"已经使用过了！\`;
+      }
+
+      // 单词有效
+      this.lastWord = lowerWord;
+      this.history.push(lowerWord);
+      return \`玩家：\${word}\`;
+    }
+  }
+
+  // 计算机接龙
+  computerTurn() {
+    const lastLetter = this.lastWord.charAt(this.lastWord.length - 1);
+    const possibleWords = this.words[lastLetter] || [];
+    const availableWords = possibleWords.filter(w => !this.history.includes(w));
+
+    if (availableWords.length === 0) {
+      return '计算机无法接龙，你赢了！';
+    }
+
+    // 随机选择单词
+    const randomIndex = Math.floor(Math.random() * availableWords.length);
+    const computerWord = availableWords[randomIndex];
+
+    this.lastWord = computerWord;
+    this.history.push(computerWord);
+
+    return \`计算机：\${computerWord}\`;
+  }
+}`;
+
+    const bankSystemCode = `// 简易银行系统 - JavaScript代码
+class BankSystem {
+  constructor() {
+    this.accounts = {};
+    this.currentAccount = null;
+  }
+
+  // 创建账户
+  createAccount(name) {
+    if (!name) {
+      return '请输入账户名称！';
+    }
+
+    if (this.accounts[name]) {
+      return \`账户"\${name}"已存在！\`;
+    }
+
+    this.accounts[name] = {
+      name: name,
+      balance: 0
+    };
+
+    this.currentAccount = name;
+    return \`账户"\${name}"创建成功！初始余额：0元。\`;
+  }
+
+  // 存款
+  deposit(amount) {
+    if (!this.currentAccount) {
+      return '请先创建账户！';
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return '请输入有效的存款金额！';
+    }
+
+    this.accounts[this.currentAccount].balance += amount;
+    return \`存款成功！存入\${amount}元。当前余额：\${this.accounts[this.currentAccount].balance}元。\`;
+  }
+
+  // 取款
+  withdraw(amount) {
+    if (!this.currentAccount) {
+      return '请先创建账户！';
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return '请输入有效的取款金额！';
+    }
+
+    if (amount > this.accounts[this.currentAccount].balance) {
+      return \`取款失败！余额不足。当前余额：\${this.accounts[this.currentAccount].balance}元。\`;
+    }
+
+    this.accounts[this.currentAccount].balance -= amount;
+    return \`取款成功！取出\${amount}元。当前余额：\${this.accounts[this.currentAccount].balance}元。\`;
+  }
+
+  // 查询余额
+  checkBalance() {
+    if (!this.currentAccount) {
+      return '请先创建账户！';
+    }
+
+    return \`账户"\${this.currentAccount}"当前余额：\${this.accounts[this.currentAccount].balance}元。\`;
+  }
+}`;
+
+    const rockPaperScissorsCode = `// 猜拳游戏 - JavaScript代码
+class RockPaperScissors {
+  constructor() {
+    this.playerScore = 0;
+    this.computerScore = 0;
+    this.roundCount = 0;
+  }
+
+  // 开始游戏
+  start() {
+    this.playerScore = 0;
+    this.computerScore = 0;
+    this.roundCount = 0;
+    return '游戏开始！请选择您的出拳（石头、布或剪刀）。';
+  }
+
+  // 玩一局
+  playRound(playerChoice) {
+    this.roundCount++;
+
+    // 计算机随机选择
+    const choices = ['rock', 'paper', 'scissors'];
+    const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+    // 判断胜负
+    let result = '';
+
+    if (playerChoice === computerChoice) {
+      result = '平局！';
+    } else if (
+      (playerChoice === 'rock' && computerChoice === 'scissors') ||
+      (playerChoice === 'paper' && computerChoice === 'rock') ||
+      (playerChoice === 'scissors' && computerChoice === 'paper')
+    ) {
+      result = '你赢了这一局！';
+      this.playerScore++;
+    } else {
+      result = '计算机赢了这一局！';
+      this.computerScore++;
+    }
+
+    // 翻译选择为中文
+    const choiceMap = {
+      'rock': '石头',
+      'paper': '布',
+      'scissors': '剪刀'
+    };
+
+    const playerChoiceCN = choiceMap[playerChoice];
+    const computerChoiceCN = choiceMap[computerChoice];
+
+    let message = \`第\${this.roundCount}局：\`;
+    message += \`你出了 \${playerChoiceCN}，计算机出了 \${computerChoiceCN}\`;
+    message += \`<br>\${result}\`;
+
+    // 检查游戏是否结束
+    if (this.playerScore >= 2) {
+      message += '<br><strong>恭喜！你赢了游戏！</strong>';
+    } else if (this.computerScore >= 2) {
+      message += '<br><strong>计算机赢了游戏！再接再厉！</strong>';
+    }
+
+    return {
+      message: message,
+      playerScore: this.playerScore,
+      computerScore: this.computerScore
+    };
+  }
+}`;
+    window.addEventListener('DOMContentLoaded', () => {
+        const game = location.hash.slice(1);   // 去掉#号
+        if (game) {
+            loadGame(game);                      // 直接运行对应游戏
+        } else {
+            // 如果直接打开 play.html 没给 hash，就退回列表页
+            location.replace('games.html');
+        }
+    });
+</script>
+</body>
+</html>
