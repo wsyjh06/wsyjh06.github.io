@@ -1,958 +1,1058 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <title>数智童科启蒙团 - 用科技点亮乡村童年</title>
-
-    <link href="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.staticfile.org/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-blue: #4A90E2;   /* 科技蓝 */
-            --growth-green: #7ED321;  /* 成长绿 */
-            --warm-yellow: #FFCE00;   /* 暖阳黄 */
-            --soft-bg: #F8FBFF;       /* 浅蓝色背景 */
-            --text-color: #4A4A4A;
-        }
-
-        body {
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            background-color: var(--soft-bg);
-            color: var(--text-color);
-            scroll-behavior: smooth;
-        }
-
-        /* 导航栏样式 */
-        .navbar {
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 1rem 2rem;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: var(--primary-blue) !important;
-            font-size: 1.5rem;
-        }
-
-        /* Banner 区域 */
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
-            padding: 100px 0;
-            color: white;
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-            text-align: center;
-        }
-        .hero-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; }
-        .hero-subtitle { font-size: 1.2rem; opacity: 0.9; }
-
-        /* 通用卡片样式 */
-        .section-title {
-            text-align: center;
-            margin: 60px 0 40px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        .section-title::after {
-            content: '';
-            width: 50px;
-            height: 4px;
-            background: var(--warm-yellow);
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        /* --- 视频区域：B站风格 + 展开收纳功能 --- */
-        .video-card {
-            background: transparent;
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 24px;
-            cursor: pointer;
-        }
-
-        .video-thumb-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%; /* 强制 16:9 比例 */
-            border-radius: 12px;
-            overflow: hidden;
-            background-color: #e3e5e7;
-        }
-
-        .video-thumb-img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        /* 悬停效果 */
-        .video-card:hover .video-thumb-img {
-            transform: scale(1.08);
-        }
-
-        /* 标题：最多两行，超出省略 */
-        .video-title {
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.4;
-            height: 42px;
-            color: #18191c;
-            margin: 10px 0 6px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            transition: color 0.3s;
-        }
-
-        .video-card:hover .video-title {
-            color: var(--primary-blue);
-        }
-
-        .video-meta {
-            display: flex;
-            font-size: 13px;
-            color: #9499a0;
-            align-items: center;
-        }
-
-        /* 关键：控制隐藏视频的类 */
-        .video-item-hidden {
-            display: none !important;
-        }
-
-        /* 播放器模态框优化 */
-        .modal-content { border-radius: 20px; overflow: hidden; border: none; }
-        video { width: 100%; display: block; background: #000; }
-
-
-        /* 关于/介绍 区域 */
-        .about-box {
-            background: white;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        }
-
-        footer {
-            background: #333;
-            color: #ccc;
-            padding: 40px 0;
-            margin-top: 80px;
-        }
-
-        /*照片墙部分*/
-        .photo-wall-container {
-            width: 100%;
-            height: 400px; /* 控制显示区域高度 */
-            overflow: hidden;
-            position: relative;
-            border-radius: 20px;
-            background: #eee;
-            /* 顶部和底部的淡出遮罩，增加高级感 */
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-        }
-
-        /* 滚动轨道 */
-        .photo-track {
-            display: flex;
-            flex-direction: column;
-            animation: scrollVertical 20s linear infinite; /* 20秒走完一个循环 */
-        }
-
-        /* 鼠标悬停时暂停滚动 */
-        .photo-track:hover {
-            animation-play-state: paused;
-        }
-
-        /* 单个图片容器 */
-        .photo-item {
-            width: 100%;
-            padding: 10px;
-        }
-
-        .photo-item img {
-            width: 100%;
-            height: 200px; /* 固定图片显示高度 */
-            object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .photo-item img:hover {
-            transform: scale(1.02);
-        }
-
-        /* 垂直滚动动画逻辑 */
-        @keyframes scrollVertical {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                /* 这里的位移量需根据图片数量调整，如果是4张图，则位移 -50% */
-                transform: translateY(-50%);
-            }
-        }
-
-        /* 标题样式 */
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-        }
-
-        .title-main {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .title-sub {
-            display: block;
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        /* 编程小游戏按钮样式 - 更大尺寸 */
-        .game-buttons-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 35px; /* 增加间距 */
-            margin: 60px 0; /* 增加上下边距 */
-            padding: 30px;
-            min-height: 400px;
-            align-items: center;
-        }
-
-        /* 游戏按钮样式 - 加大尺寸 */
-        .game-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 220px; /* 增加宽度 */
-            height: 220px; /* 增加高度 */
-            color: #e5dede;
-            font-weight: bold;
-            text-decoration: none;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border-radius: 20px; /* 增加圆角 */
-            box-shadow: 8px 8px 3px #000000; /* 增加阴影深度 */
-            background-color: var(--primary-blue);
-            border: 5px solid var(--growth-green); /* 增加边框厚度 */
-            z-index: 1;
-        }
-
-        .game-button:hover {
-            background-color: var(--growth-green);
-            border-color: var(--primary-blue);
-            transform: translate(-10px, -10px) rotate(3deg); /* 增加悬停位移 */
-            box-shadow: 16px 16px 0 #000000, 25px 25px 30px rgba(64, 164, 122, 0.4); /* 加强阴影 */
-            z-index: 10;
-        }
-
-        .game-button::before,
-        .game-button::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                    90deg,
-                    transparent,
-                    rgba(255, 255, 255, 0.2),
-                    transparent
-            );
-            transition: 0.6s;
-            z-index: 2;
-        }
-
-        .game-button::before {
-            left: -100%;
-        }
-        .game-button::after {
-            left: 100%;
-        }
-
-        .game-button:hover::before {
-            animation: swipeRight 1.2s infinite;
-        }
-        .game-button:hover::after {
-            animation: swipeLeft 1.2s infinite;
-        }
-
-        @keyframes swipeRight {
-            100% {
-                transform: translateX(200%) skew(-45deg);
-            }
-        }
-
-        @keyframes swipeLeft {
-            100% {
-                transform: translateX(-200%) skew(-45deg);
-            }
-        }
-
-        /* 游戏图标样式 - 更大 */
-        .game-icon-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 3;
-        }
-
-        .game-icon {
-            font-size: 64px; /* 增加图标大小 */
-            width: 80px; /* 增加图标容器宽度 */
-            height: 80px; /* 增加图标容器高度 */
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-
-        .game-name {
-            font-size: 22px; /* 增加名称字体大小 */
-            letter-spacing: 0.8px;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            text-align: center;
-            margin-top: 8px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .game-button-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            line-height: 1.3;
-            text-align: center;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 3;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-
-        .game-button-text span:first-child {
-            font-size: 13px;
-            font-weight: normal;
-            opacity: 0.9;
-        }
-
-        .game-button-text span:last-child {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        /* 悬停效果 */
-        .game-button:hover .game-icon-container {
-            transform: translateY(-15px);
-        }
-
-        .game-button:hover .game-icon {
-            font-size: 48px; /* 悬停时图标大小 */
-            width: 60px;
-            height: 60px;
-        }
-
-        .game-button:hover .game-name,
-        .game-button:hover .game-button-text {
-            opacity: 1;
-            max-height: 80px; /* 增加显示高度 */
-            margin-top: 15px;
-        }
-
-        /* 游戏图标动画 */
-        @keyframes spin-and-zoom {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            25% {
-                transform: rotate(90deg) scale(1.2);
-            }
-            50% {
-                transform: rotate(180deg) scale(1.1);
-            }
-            75% {
-                transform: rotate(270deg) scale(1.2);
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
-        }
-
-        .game-button:hover .game-icon {
-            animation: spin-and-zoom 2.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
-        }
-
-        .game-button:hover .game-name {
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
-            animation: textGlow 2s infinite alternate;
-        }
-
-        @keyframes textGlow {
-            from {
-                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
-            }
-            to {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 3px 3px 6px rgba(0, 0, 0, 0.4);
-            }
-        }
-
-        .game-button:active .game-icon,
-        .game-button:active .game-name,
-        .game-button:active .game-button-text {
-            transform: scale(0.9);
-            transition: transform 0.1s;
-        }
-
-        /* 标签样式 - 更大 */
-        .game-tags {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .game-button:hover .game-tags {
-            opacity: 1;
-            max-height: 50px;
-        }
-
-        .game-tag {
-            font-size: 11px; /* 增加标签字体 */
-            padding: 4px 8px; /* 增加标签内边距 */
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        /* 开始游戏按钮 - Uiverse风格 */
-        .start-game-btn {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 2rem;
-            overflow: hidden;
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, var(--primary-blue), #3a7bc8);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-            margin: 0 auto;
-            min-width: 180px;
-        }
-
-        .start-game-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
-        }
-
-        .start-game-btn:active {
-            transform: translateY(0);
-        }
-
-        /* 按钮文本 */
-        .start-game-btn .relative {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 2;
-        }
-
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .start-game-btn {
-                padding: 0.6rem 1.5rem;
-                font-size: 1rem;
-            }
-        }
-        /* 响应式设计 - 适应更大的按钮 */
-        @media (max-width: 1200px) {
-            .game-buttons-container {
-                gap: 30px;
-            }
-
-            .game-button {
-                width: 200px;
-                height: 200px;
-            }
-
-            .game-icon {
-                font-size: 60px;
-                width: 75px;
-                height: 75px;
-            }
-
-            .game-name {
-                font-size: 20px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .game-buttons-container {
-                gap: 25px;
-            }
-
-            .game-button {
-                width: 180px;
-                height: 180px;
-            }
-
-            .game-icon {
-                font-size: 56px;
-                width: 70px;
-                height: 70px;
-            }
-
-            .game-name {
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .game-buttons-container {
-                gap: 20px;
-            }
-
-            .game-button {
-                width: 160px;
-                height: 160px;
-            }
-
-            .game-icon {
-                font-size: 48px;
-                width: 60px;
-                height: 60px;
-            }
-
-            .game-name {
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .game-buttons-container {
-                gap: 15px;
-            }
-
-            .game-button {
-                width: 150px;
-                height: 150px;
-            }
-
-            .game-icon {
-                font-size: 40px;
-                width: 50px;
-                height: 50px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .game-buttons-container {
-                gap: 15px;
-            }
-
-            .game-button {
-                width: 130px;
-                height: 130px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <title>数智童科启蒙团 - 用科技点亮乡村童年</title>
+
+  <link href="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.staticfile.org/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-blue: #4A90E2;   /* 科技蓝 */
+      --growth-green: #7ED321;  /* 成长绿 */
+      --warm-yellow: #FFCE00;   /* 暖阳黄 */
+      --soft-bg: #F8FBFF;       /* 浅蓝色背景 */
+      --text-color: #4A4A4A;
+      --tape-black: #1A1A1A;    /* 录像带主体黑色 */
+      --tape-gray: #333333;     /* 录像带侧边灰色 */
+      --tape-strip: #666666;    /* 录像带磁带条纹色 */
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background-color: var(--soft-bg);
+      color: var(--text-color);
+      scroll-behavior: smooth;
+    }
+
+    /* 导航栏样式 */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 1rem 2rem;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      color: var(--primary-blue) !important;
+      font-size: 1.5rem;
+    }
+
+    /* Banner 区域 */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
+      padding: 100px 0;
+      color: white;
+      border-bottom-left-radius: 50px;
+      border-bottom-right-radius: 50px;
+      text-align: center;
+    }
+    .hero-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 20px; }
+    .hero-subtitle { font-size: 1.2rem; opacity: 0.9; }
+
+    /* 通用卡片样式 */
+    .section-title {
+      text-align: center;
+      margin: 60px 0 40px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    .section-title::after {
+      content: '';
+      width: 50px;
+      height: 4px;
+      background: var(--warm-yellow);
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* ===============================
+   📦 外层容器（轻背景）
+   =============================== */
+    .video-tape-wrapper {
+      width: 100%;
+      padding: 24px 20px;
+      margin: 0 auto 28px;
+
+      background:
+              linear-gradient(
+                      to bottom,
+                      #f7f9fc,
+                      #eef2f8
+              );
+
+      border-radius: 16px;
+
+      box-shadow:
+              0 12px 30px rgba(0, 0, 0, 0.08);
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ===============================
+       👉 横向滚动轨道（内容区）
+       =============================== */
+    .video-scroll-container {
+      display: flex;
+      gap: 20px;
+      padding: 16px 10px;
+
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+
+      background: transparent;
+    }
+
+    /* ===============================
+       🧭 底部横向滚动条（美观版）
+       =============================== */
+
+    /* Chrome / Edge / Safari */
+    .video-scroll-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .video-scroll-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+
+    .video-scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 4px;
+    }
+
+    .video-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .video-scroll-container::-webkit-scrollbar-thumb {
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-scroll-container:hover::-webkit-scrollbar-thumb {
+      opacity: 1;
+    }
+
+
+    /* Firefox */
+    .video-scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.35) rgba(0,0,0,0.08);
+    }
+
+
+    /* ===============================
+       🎬 视频卡片（重点）
+       =============================== */
+    .video-card {
+      flex: 0 0 260px;
+      scroll-snap-align: start;
+
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+
+      box-shadow:
+              0 6px 18px rgba(0, 0, 0, 0.12);
+
+      transition:
+              transform 0.25s ease,
+              box-shadow 0.25s ease;
+    }
+
+    /* Hover：轻微浮起即可 */
+    .video-card:hover {
+      transform: translateY(-4px);
+
+      box-shadow:
+              0 12px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    /* ===============================
+       🖼️ 缩略图区域
+       =============================== */
+    .video-card img,
+    .video-card video {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    /* ===============================
+       📝 文本信息
+       =============================== */
+    .video-card .title {
+      padding: 10px 12px 4px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .video-card .meta {
+      padding: 0 12px 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+
+
+    .video-thumb-container {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 比例 */
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      background-color: #e3e5e7;
+    }
+
+    .video-thumb-img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    /* 悬停效果 */
+    .video-card:hover .video-thumb-img {
+      transform: scale(1.08);
+    }
+
+    /* 标题：最多两行，超出省略 */
+    .video-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.4;
+      height: 42px;
+      color: #18191c;
+      margin: 10px 0 6px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      transition: color 0.3s;
+      padding: 0 10px;
+    }
+
+    .video-card:hover .video-title {
+      color: var(--primary-blue);
+    }
+
+    .video-meta {
+      display: flex;
+      font-size: 13px;
+      color: #9499a0;
+      align-items: center;
+      padding: 0 10px 10px;
+    }
+
+    /* 播放器模态框优化 */
+    .modal-content { border-radius: 20px; overflow: hidden; border: none; }
+    video { width: 100%; display: block; background: #000; }
+
+    /* 关于/介绍 区域 */
+    .about-box {
+      background: white;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    footer {
+      background: #333;
+      color: #ccc;
+      padding: 40px 0;
+      margin-top: 80px;
+    }
+
+    /*照片墙部分*/
+    .photo-wall-container {
+      width: 100%;
+      height: 400px; /* 控制显示区域高度 */
+      overflow: hidden;
+      position: relative;
+      border-radius: 20px;
+      background: #eee;
+      /* 顶部和底部的淡出遮罩，增加高级感 */
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+      mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    }
+
+    /* 滚动轨道 */
+    .photo-track {
+      display: flex;
+      flex-direction: column;
+      animation: scrollVertical 20s linear infinite; /* 20秒走完一个循环 */
+    }
+
+    /* 鼠标悬停时暂停滚动 */
+    .photo-track:hover {
+      animation-play-state: paused;
+    }
+
+    /* 单个图片容器 */
+    .photo-item {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 200px; /* 固定图片显示高度 */
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .photo-item img:hover {
+      transform: scale(1.02);
+    }
+
+    /* 垂直滚动动画逻辑 */
+    @keyframes scrollVertical {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        /* 这里的位移量需根据图片数量调整，如果是4张图，则位移 -50% */
+        transform: translateY(-50%);
+      }
+    }
+
+    /* 标题样式 */
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .title-main {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-blue), var(--growth-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .title-sub {
+      display: block;
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* 编程小游戏按钮样式 - 更大尺寸 */
+    .game-buttons-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 35px; /* 增加间距 */
+      margin: 60px 0; /* 增加上下边距 */
+      padding: 30px;
+      min-height: 400px;
+      align-items: center;
+    }
+
+    /* 游戏按钮样式 - 加大尺寸 */
+    .game-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 220px; /* 增加宽度 */
+      height: 220px; /* 增加高度 */
+      color: #e5dede;
+      font-weight: bold;
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border-radius: 20px; /* 增加圆角 */
+      box-shadow: 8px 8px 3px #000000; /* 增加阴影深度 */
+      background-color: var(--primary-blue);
+      border: 5px solid var(--growth-green); /* 增加边框厚度 */
+      z-index: 1;
+    }
+
+    .game-button:hover {
+      background-color: var(--growth-green);
+      border-color: var(--primary-blue);
+      transform: translate(-10px, -10px) rotate(3deg); /* 增加悬停位移 */
+      box-shadow: 16px 16px 0 #000000, 25px 25px 30px rgba(64, 164, 122, 0.4); /* 加强阴影 */
+      z-index: 10;
+    }
+
+    .game-button::before,
+    .game-button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255, 255, 255, 0.2),
+              transparent
+      );
+      transition: 0.6s;
+      z-index: 2;
+    }
+
+    .game-button::before {
+      left: -100%;
+    }
+    .game-button::after {
+      left: 100%;
+    }
+
+    .game-button:hover::before {
+      animation: swipeRight 1.2s infinite;
+    }
+    .game-button:hover::after {
+      animation: swipeLeft 1.2s infinite;
+    }
+
+    @keyframes swipeRight {
+      100% {
+        transform: translateX(200%) skew(-45deg);
+      }
+    }
+
+    @keyframes swipeLeft {
+      100% {
+        transform: translateX(-200%) skew(-45deg);
+      }
+    }
+
+    /* 游戏图标样式 - 更大 */
+    .game-icon-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 3;
+    }
+
+    .game-icon {
+      font-size: 64px; /* 增加图标大小 */
+      width: 80px; /* 增加图标容器宽度 */
+      height: 80px; /* 增加图标容器高度 */
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+
+    .game-name {
+      font-size: 22px; /* 增加名称字体大小 */
+      letter-spacing: 0.8px;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      text-align: center;
+      margin-top: 8px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-button-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.3;
+      text-align: center;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 3;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .game-button-text span:first-child {
+      font-size: 13px;
+      font-weight: normal;
+      opacity: 0.9;
+    }
+
+    .game-button-text span:last-child {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    /* 悬停效果 */
+    .game-button:hover .game-icon-container {
+      transform: translateY(-15px);
+    }
+
+    .game-button:hover .game-icon {
+      font-size: 48px; /* 悬停时图标大小 */
+      width: 60px;
+      height: 60px;
+    }
+
+    .game-button:hover .game-name,
+    .game-button:hover .game-button-text {
+      opacity: 1;
+      max-height: 80px; /* 增加显示高度 */
+      margin-top: 15px;
+    }
+
+    /* 游戏图标动画 */
+    @keyframes spin-and-zoom {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+      25% {
+        transform: rotate(90deg) scale(1.2);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.1);
+      }
+      75% {
+        transform: rotate(270deg) scale(1.2);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    .game-button:hover .game-icon {
+      animation: spin-and-zoom 2.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
+    }
+
+    .game-button:hover .game-name {
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+      animation: textGlow 2s infinite alternate;
+    }
+
+    @keyframes textGlow {
+      from {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+      }
+      to {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 3px 3px 6px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .game-button:active .game-icon,
+    .game-button:active .game-name,
+    .game-button:active .game-button-text {
+      transform: scale(0.9);
+      transition: transform 0.1s;
+    }
+
+    /* 标签样式 - 更大 */
+    .game-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .game-button:hover .game-tags {
+      opacity: 1;
+      max-height: 50px;
+    }
+
+    .game-tag {
+      font-size: 11px; /* 增加标签字体 */
+      padding: 4px 8px; /* 增加标签内边距 */
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    /* 开始游戏按钮 - Uiverse风格 */
+    .start-game-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 2rem;
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, var(--primary-blue), #3a7bc8);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      margin: 0 auto;
+      min-width: 180px;
+    }
+
+    .start-game-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+    }
+
+    .start-game-btn:active {
+      transform: translateY(0);
+    }
+
+    /* 按钮文本 */
+    .start-game-btn .relative {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .start-game-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+      }
+      /* 移动端缩小录像带和视频卡片 */
+      .video-tape-wrapper::before,
+      .video-tape-wrapper::after {
+        width: 40px;
+        height: 40px;
+        border-width: 8px;
+      }
+      .video-card {
+        flex: 0 0 240px;
+      }
+      .video-scroll-container {
+        padding: 20px 30px;
+      }
+    }
+
+    /* 响应式设计 - 适应更大的按钮 */
+    @media (max-width: 1200px) {
+      .game-buttons-container {
+        gap: 30px;
+      }
+
+      .game-button {
+        width: 200px;
+        height: 200px;
+      }
+
+      .game-icon {
+        font-size: 60px;
+        width: 75px;
+        height: 75px;
+      }
+
+      .game-name {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .game-buttons-container {
+        gap: 25px;
+      }
+
+      .game-button {
+        width: 180px;
+        height: 180px;
+      }
+
+      .game-icon {
+        font-size: 56px;
+        width: 70px;
+        height: 70px;
+      }
+
+      .game-name {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .game-buttons-container {
+        gap: 20px;
+      }
+
+      .game-button {
+        width: 160px;
+        height: 160px;
+      }
+
+      .game-icon {
+        font-size: 48px;
+        width: 60px;
+        height: 60px;
+      }
+
+      .game-name {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .game-buttons-container {
+        gap: 15px;
+      }
+
+      .game-button {
+        width: 150px;
+        height: 150px;
+      }
+
+      .game-icon {
+        font-size: 40px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .game-buttons-container {
+        gap: 15px;
+      }
+
+      .game-button {
+        width: 130px;
+        height: 130px;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">💡 数智童科启蒙团</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#home">首页</a></li>
-                <li class="nav-item"><a class="nav-link" href="#videos">视频科普</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">项目介绍</a></li>
-                <li class="nav-item"><a class="nav-link" href="#team">关于我们</a></li>
-                <li class="nav-item"><a class="nav-link" href="#programming-games">编程游戏</a></li>
-            </ul>
-        </div>
+  <div class="container">
+    <a class="navbar-brand" href="#">💡 数智童科启蒙团</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#home">首页</a></li>
+        <li class="nav-item"><a class="nav-link" href="#videos">视频科普</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">项目介绍</a></li>
+        <li class="nav-item"><a class="nav-link" href="#team">关于我们</a></li>
+        <li class="nav-item"><a class="nav-link" href="#programming-games">编程游戏</a></li>
+      </ul>
     </div>
+  </div>
 </nav>
 
 <section id="home" class="hero-section animate__animated animate__fadeIn">
-    <div class="container">
-        <h1 class="hero-title">用科技点亮乡村童年</h1>
-        <p class="hero-subtitle">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
-        <a href="#videos" class="btn btn-warning btn-lg rounded-pill mt-4 px-5 fw-bold">开始学习</a>
-    </div>
+  <div class="container">
+    <h1 class="hero-title">用科技点亮乡村童年</h1>
+    <p class="hero-subtitle">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
+    <a href="#videos" class="btn btn-warning btn-lg rounded-pill mt-4 px-5 fw-bold">开始学习</a>
+  </div>
 </section>
 
 <section id="videos" class="container mt-5">
-    <h2 class="section-title">科普视频课</h2>
+  <h2 class="section-title">科普视频课</h2>
 
-    <div class="d-flex justify-content-center mb-4 gap-2">
-        <button class="btn btn-outline-primary active btn-sm rounded-pill px-4">全部</button>
-        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">硬件基础</button>
-        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">编程启蒙</button>
-        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">网络安全</button>
-    </div>
+  <div class="d-flex justify-content-center mb-4 gap-2">
+    <button class="btn btn-outline-primary active btn-sm rounded-pill px-4">全部</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">AI发展和应用</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">编程启蒙</button>
+    <button class="btn btn-outline-primary btn-sm rounded-pill px-4">计算机科普小知识</button>
+  </div>
 
-    <div class="row" id="videoListContainer">
+  <!-- 新增：录像带外层容器（承载录像带背景） -->
+  <div class="video-tape-wrapper">
+    <!-- 视频水平滚动容器（内含录像带磁带背景） -->
+    <div class="video-scroll-container" id="videoScrollContainer">
+      <!-- 视频卡片将通过JS动态生成 -->
     </div>
-    <div class="text-center mt-4">
-        <button id="moreBtn" class="btn btn-outline-primary rounded-pill px-5 py-2" onclick="toggleVideos()">
-            查看更多视频
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-            </svg>
-        </button>
-    </div>
-    <p class="text-center text-muted mt-3" style="font-size: 0.9rem;">
-        💡 温馨提示：检测到当前网络环境，建议在 Wi-Fi 下观看。点击视频可开启"节省流量"模式。
-    </p>
+  </div>
+
+  <p class="text-center text-muted mt-3" style="font-size: 0.9rem;">
+    💡 温馨提示：检测到当前网络环境，建议在 Wi-Fi 下观看。点击视频可开启"节省流量"模式。
+  </p>
 </section>
 
 <!--我们是谁介绍部分-->
 <section id="about" class="container mt-5 py-5">
-    <div class="row align-items-center about-box mx-2">
-        <div class="col-md-6 mb-4 mb-md-0">
-            <div class="photo-wall-container">
-                <div class="photo-track">
-                    <div class="photo-item"><img src="static/img/show1.jpg" alt="活动1"></div>
-                    <div class="photo-item"><img src="static/img/show2.jpg" alt="活动2"></div>
-                    <div class="photo-item"><img src="static/img/show3.jpg" alt="活动3"></div>
-                    <div class="photo-item"><img src="static/img/show4.png" alt="活动4"></div>
-                </div>
-            </div>
+  <div class="row align-items-center about-box mx-2">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <div class="photo-wall-container">
+        <div class="photo-track">
+          <div class="photo-item"><img src="static/img/show1.jpg" alt="活动1"></div>
+          <div class="photo-item"><img src="static/img/show2.jpg" alt="活动2"></div>
+          <div class="photo-item"><img src="static/img/show3.jpg" alt="活动3"></div>
+          <div class="photo-item"><img src="static/img/show4.png" alt="活动4"></div>
         </div>
-
-        <div class="col-md-6 ps-md-5">
-            <h2 class="mb-4" style="color:var(--primary-blue)">我们是谁？</h2>
-            <p>"数智童科启蒙团"是一个专注于乡村儿童计算机科学素养提升的公益项目，随着人工智能领域的快速发展，科技正越来越多的融入我们的生活。我们希望散播科普的种子，在更多的同学们心中萌芽！</p>
-            <p>我们通过制作通俗易懂的动画、组织线上互动教学，让复杂的二进制、算法、硬件知识变成孩子们眼中的"魔法"。</p>
-            <ul class="list-unstyled">
-                <li>✅ <strong>普及化：</strong> 零基础起步，适配儿童认知</li>
-                <li>✅ <strong>趣味化：</strong> 拒绝说教，寓教于乐</li>
-                <li>✅ <strong>持续性：</strong> 建立长期更新的资源库</li>
-            </ul>
-        </div>
+      </div>
     </div>
+
+    <div class="col-md-6 ps-md-5">
+      <h2 class="mb-4" style="color:var(--primary-blue)">我们是谁？</h2>
+      <p>"数智童科启蒙团"是一个专注于乡村儿童计算机科学素养提升的公益项目。我们发现，许多欠发达地区的校舍虽然配置了电脑，但孩子们缺乏系统的指引去理解科技。</p>
+      <p>我们通过制作通俗易懂的动画、组织线上互动教学，让复杂的二进制、算法、硬件知识变成孩子们眼中的"魔法"。</p>
+      <ul class="list-unstyled">
+        <li>✅ <strong>普及化：</strong> 零基础起步，适配儿童认知</li>
+        <li>✅ <strong>趣味化：</strong> 拒绝说教，寓教于乐</li>
+        <li>✅ <strong>持续性：</strong> 建立长期更新的资源库</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <!-- 编程小游戏模块 -->
 <section id="programming-games" class="container mt-5 py-5">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="section-title">编程小游戏</h2>
-            <p class="text-center mb-4">通过有趣的游戏学习编程思维，点击游戏按钮即可体验</p>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <h2 class="section-title">编程小游戏</h2>
+      <p class="text-center mb-4">通过有趣的游戏学习编程思维，点击游戏按钮即可体验</p>
     </div>
+  </div>
 
-    <!-- 游戏按钮容器 -->
-    <div class="game-buttons-container" id="gameButtonsContainer">
-        <!-- 游戏按钮将通过JS动态生成 -->
-    </div>
+  <!-- 游戏按钮容器 -->
+  <div class="game-buttons-container" id="gameButtonsContainer">
+    <!-- 游戏按钮将通过JS动态生成 -->
+  </div>
 
-    <!-- 游戏描述区域 -->
-    <div class="text-center mt-5">
-        <div class="card border-0 shadow-sm p-4" style="background: linear-gradient(135deg, rgba(248, 251, 255, 0.9), rgba(240, 247, 255, 0.9));">
-            <h4 id="currentGameTitle" class="text-primary mb-3">猜数字游戏</h4>
-            <p id="currentGameDesc" class="text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
-                计算机随机生成一个1-100的数字，您来猜测。计算机会提示"太大"或"太小"，看看您能用几次猜中！
-            </p>
-            <a id="startGameBtn" href="play.html#guessNumber" class="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-indigo-500 rounded-md group start-game-btn">
+  <!-- 游戏描述区域 -->
+  <div class="text-center mt-5">
+    <div class="card border-0 shadow-sm p-4" style="background: linear-gradient(135deg, rgba(248, 251, 255, 0.9), rgba(240, 247, 255, 0.9));">
+      <h4 id="currentGameTitle" class="text-primary mb-3">猜数字游戏</h4>
+      <p id="currentGameDesc" class="text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
+        计算机随机生成一个1-100的数字，您来猜测。计算机会提示"太大"或"太小"，看看您能用几次猜中！
+      </p>
+      <a id="startGameBtn" href="play.html#guessNumber" class="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-indigo-500 rounded-md group start-game-btn">
   <span class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-mr-4 group-hover:-mt-4">
     <span class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
   </span>
-                <span class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-ml-4 group-hover:-mb-4">
+        <span class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-indigo-700 rounded group-hover:-ml-4 group-hover:-mb-4">
     <span class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"></span>
   </span>
-                <span class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-indigo-600 rounded-md group-hover:translate-x-0"></span>
-                <span class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+        <span class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-indigo-600 rounded-md group-hover:translate-x-0"></span>
+        <span class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
     <i class="fas fa-play-circle me-2"></i>开始游戏
   </span>
-            </a>
-        </div>
+      </a>
     </div>
+  </div>
 </section>
 
 <footer id="team">
-    <div class="container text-center">
-        <h4 class="text-white mb-4">联系我们</h4>
-        <p>如果您有任何建议或想加入我们，欢迎联系：</p>
-        <p class="mb-2">📧 邮箱：contact@shuzhitongke.org</p>
-        <p>📍 坐标：山东师范大学文淙楼1-221</p>
-        <hr class="bg-secondary my-4">
-        <p class="small">© 2025-2026 数智童科启蒙团 | 用心做科普，用爱传能量</p>
-    </div>
+  <div class="container text-center">
+    <h4 class="text-white mb-4">联系我们</h4>
+    <p>如果您有任何建议或想加入我们，欢迎联系：</p>
+    <p class="mb-2">📧 邮箱：contact@shuzhitongke.org</p>
+    <p>📍 坐标：山东师范大学文淙楼1-221</p>
+    <hr class="bg-secondary my-4">
+    <p class="small">© 2025-2026 数智童科启蒙团 | 用心做科普，用爱传能量</p>
+  </div>
 </footer>
 
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="v-title">视频播放</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
-            </div>
-            <div class="modal-body p-0">
-                <video id="mainPlayer" controls poster="">
-                    <source id="videoSource" src="" type="video/mp4">
-                    您的浏览器不支持视频播放。
-                </video>
-            </div>
-            <div class="p-3 text-center">
-                <span class="badge bg-info">低流量模式已开启</span>
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="v-title">视频播放</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
+      </div>
+      <div class="modal-body p-0">
+        <video id="mainPlayer" controls poster="">
+          <source id="videoSource" src="" type="video/mp4">
+          您的浏览器不支持视频播放。
+        </video>
+      </div>
+      <div class="p-3 text-center">
+        <span class="badge bg-info">低流量模式已开启</span>
+      </div>
     </div>
+  </div>
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // 视频数据
-    const videoData = [
-        { id: 1, title: "电脑是怎么'说话'的？", cat: "基础", cover: "static/img/cover1.png", url: "static/video/video1.mp4" },
-        { id: 2, title: "小小程序员的第一步", cat: "编程", cover: "static/img/cover2.png", url: "static/video/video2.mp4" },
-        { id: 3, title: "拆开电脑看一看", cat: "硬件", cover: "static/img/cover3.png", url: "static/video/video3.mp4" },
-        { id: 4, title: "互联网是怎么连接的？", cat: "网络", cover: "static/img/cover4.png", url: "static/video/video4.mp4" },
-        { id: 5, title: "人工智能是什么？", cat: "前沿", cover: "static/img/cover5.png", url: "static/video/video5.mp4" },
-        { id: 6, title: "如何保护上网安全？", cat: "安全", cover: "static/img/cover6.png", url: "static/video/video6.mp4" }
-    ];
+  // -------------------------
+  // 视频数据
+  // -------------------------
+  const videoData = [
+    { id: 1, title: "电脑是怎么'说话'的？", cat: "AI发展和应用", cover: "static/img/cover1.png", url: "static/video/video1.mp4" },
+    { id: 2, title: "小小程序员的第一步", cat: "编程启蒙", cover: "static/img/cover2.png", url: "static/video/video2.mp4" },
+    { id: 3, title: "拆开电脑看一看", cat: "计算机科普小知识", cover: "static/img/cover3.png", url: "static/video/video3.mp4" },
+    { id: 4, title: "互联网是怎么连接的？", cat: "AI发展和应用", cover: "static/img/cover4.png", url: "static/video/video4.mp4" },
+    { id: 5, title: "人工智能是什么？", cat: "编程启蒙", cover: "static/img/cover5.png", url: "static/video/video5.mp4" },
+    { id: 6, title: "如何保护上网安全？", cat: "计算机科普小知识", cover: "static/img/cover6.png", url: "static/video/video6.mp4" }
+  ];
 
-    // 游戏数据
-    const games = [
-        {
-            id: 'guessNumber',
-            title: '猜数字游戏',
-            desc: '计算机随机生成一个1-100的数字，您来猜测。计算机会提示"太大"或"太小"，看看您能用几次猜中！',
-            icon: 'fa-brain',
-            tags: ['逻辑思维', 'JavaScript']
-        },
-        {
-            id: 'ticTacToe',
-            title: '井字棋',
-            desc: '经典的井字棋游戏，您和计算机轮流下棋，先连成一条直线（横、竖、斜）的获胜！',
-            icon: 'fa-times',
-            tags: ['对战游戏', '算法思维']
-        },
-        {
-            id: 'calculator',
-            title: '简易计算器',
-            desc: '一个功能完整的计算器，支持加减乘除运算。学习如何处理用户输入和计算逻辑。',
-            icon: 'fa-calculator',
-            tags: ['数学运算', 'JavaScript']
-        },
-        {
-            id: 'wordChain',
-            title: '单词接龙',
-            desc: '英文单词接龙游戏，您和计算机轮流说单词，新单词的首字母必须和上一个单词的尾字母相同。',
-            icon: 'fa-language',
-            tags: ['英语学习', '字符串处理']
-        },
-        {
-            id: 'bankSystem',
-            title: '简易银行系统',
-            desc: '模拟银行系统，您可以开户、存款、取款、查询余额。学习如何管理数据和状态。',
-            icon: 'fa-university',
-            tags: ['面向对象', 'JavaScript']
-        },
-        {
-            id: 'rockPaperScissors',
-            title: '猜拳游戏',
-            desc: '经典的石头剪刀布游戏，您和计算机对战。学习随机数生成和胜负判断逻辑。',
-            icon: 'fa-hand-rock',
-            tags: ['随机数', '条件判断']
-        }
-    ];
+  // -------------------------
+  // 渲染视频
+  // -------------------------
+  function renderVideos(category = '全部') {
+    const container = document.getElementById('videoScrollContainer');
+    // 根据类别过滤
+    const filtered = category === '全部' ? videoData : videoData.filter(v => v.cat === category);
 
-    // 视频相关函数
-    let isExpanded = false;
-    const showLimit = 4;
-
-    function renderVideos() {
-        const container = document.getElementById('videoListContainer');
-
-        container.innerHTML = videoData.map((v, index) => {
-            const hiddenClass = (index >= showLimit) ? 'video-item-hidden' : '';
-
-            return `
-        <div class="col-xl-3 col-lg-4 col-6 animate__animated animate__fadeIn ${hiddenClass}">
-          <div class="video-card" onclick="playVideo('${v.url}', '${v.title}', '${v.cover}')">
-            <div class="video-thumb-container">
-              <img src="${v.cover}" class="video-thumb-img" alt="${v.title}">
-            </div>
-            <div class="video-info">
-              <div class="video-title">${v.title}</div>
-              <div class="video-meta">
-                <span class="me-3">1.2万播放</span>
-                <span>12-29</span>
-              </div>
-            </div>
+    container.innerHTML = filtered.map(v => `
+      <div class="video-card animate__animated animate__fadeIn" onclick="playVideo('${v.url}', '${v.title}', '${v.cover}')">
+        <div class="video-thumb-container">
+          <img src="${v.cover}" class="video-thumb-img" alt="${v.title}">
+        </div>
+        <div class="video-info">
+          <div class="video-title">${v.title}</div>
+          <div class="video-meta">
+            <span class="me-3">1.2万播放</span>
+            <span>12-29</span>
           </div>
         </div>
+      </div>
+    `).join('');
+  }
+
+  // -------------------------
+  // 播放视频
+  // -------------------------
+  function playVideo(videoUrl, videoTitle, coverUrl) {
+    const modalEl = document.getElementById('videoModal');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    const videoTitleEl = document.getElementById('v-title');
+    const videoPlayer = document.getElementById('mainPlayer');
+    const videoSource = document.getElementById('videoSource');
+
+    videoTitleEl.textContent = videoTitle;
+    videoPlayer.poster = coverUrl;
+    videoSource.src = videoUrl;
+
+    videoPlayer.load();
+    modal.show();
+  }
+
+  function stopVideo() {
+    const videoPlayer = document.getElementById('mainPlayer');
+    const videoSource = document.getElementById('videoSource');
+
+    videoPlayer.pause();
+    videoSource.src = '';
+    videoPlayer.load();
+  }
+
+  // -------------------------
+  // 游戏数据 & 渲染（原来的逻辑保持不变）
+  // -------------------------
+  const games = [
+    { id: 'guessNumber', title: '猜数字游戏', desc: '计算机随机生成一个1-100的数字，您来猜测。计算机会提示"太大"或"太小"，看看您能用几次猜中！', icon: 'fa-brain', tags: ['逻辑思维', 'JavaScript'] },
+    { id: 'ticTacToe', title: '井字棋', desc: '经典的井字棋游戏，您和计算机轮流下棋，先连成一条直线（横、竖、斜）的获胜！', icon: 'fa-times', tags: ['对战游戏', '算法思维'] },
+    { id: 'calculator', title: '简易计算器', desc: '一个功能完整的计算器，支持加减乘除运算。学习如何处理用户输入和计算逻辑。', icon: 'fa-calculator', tags: ['数学运算', 'JavaScript'] },
+    { id: 'wordChain', title: '单词接龙', desc: '英文单词接龙游戏，您和计算机轮流说单词，新单词的首字母必须和上一个单词的尾字母相同。', icon: 'fa-language', tags: ['英语学习', '字符串处理'] },
+    { id: 'bankSystem', title: '简易银行系统', desc: '模拟银行系统，您可以开户、存款、取款、查询余额。学习如何管理数据和状态。', icon: 'fa-university', tags: ['面向对象', 'JavaScript'] },
+    { id: 'rockPaperScissors', title: '猜拳游戏', desc: '经典的石头剪刀布游戏，您和计算机对战。学习随机数生成和胜负判断逻辑。', icon: 'fa-hand-rock', tags: ['随机数', '条件判断'] }
+  ];
+
+  let currentGameIndex = 0;
+
+  function renderGameButtons() {
+    const container = document.getElementById('gameButtonsContainer');
+    container.innerHTML = '';
+
+    games.forEach((game, idx) => {
+      const a = document.createElement('a');
+      a.href = `play.html#${game.id}`;
+      a.className = 'game-button';
+      a.dataset.index = idx;
+
+      a.onmouseenter = () => selectGame(idx);
+
+      a.innerHTML = `
+        <div class="game-icon-container">
+          <i class="fas ${game.icon} game-icon"></i>
+          <div class="game-name">${game.title}</div>
+        </div>
+        <div class="game-button-text">
+          <span>点击开始</span>
+          <span>${game.title}</span>
+        </div>
+        <div class="game-tags">
+          ${game.tags.map(t => `<span class="game-tag">${t}</span>`).join('')}
+        </div>
       `;
-        }).join('');
-    }
-
-    function playVideo(videoUrl, videoTitle, coverUrl) {
-        const modalEl = document.getElementById('videoModal');
-        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-
-        const videoTitleEl = document.getElementById('v-title');
-        const videoPlayer = document.getElementById('mainPlayer');
-        const videoSource = document.getElementById('videoSource');
-
-        videoTitleEl.textContent = videoTitle;
-        videoPlayer.poster = coverUrl;
-        videoSource.src = videoUrl;
-
-        videoPlayer.load();
-        modal.show();
-
-        videoPlayer.play().catch(() => {});
-    }
-
-    function stopVideo() {
-        const videoPlayer = document.getElementById('mainPlayer');
-        const videoSource = document.getElementById('videoSource');
-
-        videoPlayer.pause();
-        videoSource.src = '';
-        videoPlayer.load();
-    }
-
-    function toggleVideos() {
-        const hiddenItems = document.querySelectorAll('.video-item-hidden');
-        const btn = document.getElementById('moreBtn');
-
-        if (!isExpanded) {
-            hiddenItems.forEach(item => {
-                item.classList.remove('video-item-hidden');
-                item.classList.add('animate__fadeInUp');
-            });
-            btn.innerHTML = '收起视频列表 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg>';
-            isExpanded = true;
-        } else {
-            renderVideos();
-            btn.innerHTML = '查看更多视频 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>';
-            isExpanded = false;
-            document.getElementById('videos').scrollIntoView();
-        }
-    }
-
-    // 游戏相关函数
-    let currentGameIndex = 0;
-
-    function renderGameButtons() {
-        const container = document.getElementById('gameButtonsContainer');
-        container.innerHTML = '';
-
-        games.forEach((game, idx) => {
-            const a = document.createElement('a');
-            a.href = `play.html#${game.id}`;   // 关键：直接带锚点跳转
-            a.className = 'game-button';
-            a.dataset.index = idx;
-
-            // 鼠标悬停时仍保留本地高亮，但不影响跳转
-            a.onmouseenter = () => selectGame(idx);
-
-            a.innerHTML = `
-      <div class="game-icon-container">
-        <i class="fas ${game.icon} game-icon"></i>
-        <div class="game-name">${game.title}</div>
-      </div>
-      <div class="game-button-text">
-        <span>点击开始</span>
-        <span>${game.title}</span>
-      </div>
-      <div class="game-tags">
-        ${game.tags.map(t => `<span class="game-tag">${t}</span>`).join('')}
-      </div>
-    `;
-            container.appendChild(a);
-        });
-
-        selectGame(0);   // 默认高亮第一个
-    }
-
-    function selectGame(index) {
-        currentGameIndex = index;
-        const game = games[index];
-
-        // 更新描述
-        document.getElementById('currentGameTitle').textContent = game.title;
-        document.getElementById('currentGameDesc').textContent  = game.desc;
-
-        // 更新主按钮链接
-        // document.getElementById('startGameBtn').href = `games.html#${game.id}`;
-        document.getElementById('startGameBtn').href = `play.html#${game.id}`
-        // 为所有按钮移除激活样式
-        document.querySelectorAll('.game-button').forEach(btn => {
-            btn.style.transform = '';
-            btn.style.boxShadow = '';
-            btn.style.borderColor = 'var(--growth-green)';
-            btn.style.backgroundColor = 'var(--primary-blue)';
-        });
-
-        // 为当前游戏按钮添加激活样式
-        const currentBtn = document.querySelector(`.game-button[data-index="${index}"]`);
-        if (currentBtn) {
-            currentBtn.style.transform = 'translate(-6px, -6px) rotate(2deg)';
-            currentBtn.style.boxShadow = '12px 12px 0 #000000, 20px 20px 25px rgba(64, 164, 122, 0.3)';
-            currentBtn.style.borderColor = 'var(--primary-blue)';
-            currentBtn.style.backgroundColor = 'var(--growth-green)';
-        }
-    }
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', () => {
-        renderVideos();
-        renderGameButtons();
+      container.appendChild(a);
     });
+
+    selectGame(0);
+  }
+
+  function selectGame(index) {
+    currentGameIndex = index;
+    const game = games[index];
+
+    document.getElementById('currentGameTitle').textContent = game.title;
+    document.getElementById('currentGameDesc').textContent  = game.desc;
+    document.getElementById('startGameBtn').href = `play.html#${game.id}`;
+
+    document.querySelectorAll('.game-button').forEach(btn => {
+      btn.style.transform = '';
+      btn.style.boxShadow = '';
+      btn.style.borderColor = 'var(--growth-green)';
+      btn.style.backgroundColor = 'var(--primary-blue)';
+    });
+
+    const currentBtn = document.querySelector(`.game-button[data-index="${index}"]`);
+    if (currentBtn) {
+      currentBtn.style.transform = 'translate(-6px, -6px) rotate(2deg)';
+      currentBtn.style.boxShadow = '12px 12px 0 #000000, 20px 20px 25px rgba(64, 164, 122, 0.3)';
+      currentBtn.style.borderColor = 'var(--primary-blue)';
+      currentBtn.style.backgroundColor = 'var(--growth-green)';
+    }
+  }
+
+  // -------------------------
+  // 初始化
+  // -------------------------
+  document.addEventListener('DOMContentLoaded', () => {
+    // 默认显示全部视频
+    renderVideos('全部');
+
+    // 分类按钮点击事件
+    const buttons = document.querySelectorAll('#videos .btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // 移除其他 active
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const category = btn.textContent.trim();
+        renderVideos(category);
+      });
+    });
+
+    // 游戏按钮
+    renderGameButtons();
+  });
 </script>
+
 </body>
 </html>
