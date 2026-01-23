@@ -745,6 +745,32 @@
         height: 130px;
       }
     }
+    /* 通用粒子容器样式 */
+    .particles-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0; /* 放在背景层 */
+      pointer-events: none; /* 鼠标穿透 */
+    }
+
+    /* 需要粒子效果的section都添加相对定位 */
+    #videos, #about, #programming-games {
+      position: relative;
+      padding: 60px 0;
+      overflow: hidden;
+    }
+
+    /* 确保section内容在粒子上方 */
+    #videos > .container,
+    #about > .container,
+    #programming-games > .container {
+      position: relative;
+      z-index: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -768,7 +794,8 @@
 </nav>
 
 <section id="home" class="hero-section animate__animated animate__fadeIn">
-  <div class="container">
+  <div class="particles-wrapper" id="heroParticles"></div>
+  <div class="container" style="position: relative; z-index: 1;">
     <h1 class="hero-title">用科技点亮乡村童年</h1>
     <p class="hero-subtitle">致力为经济欠发达地区儿童提供有趣的计算机基础科普教育</p>
     <a href="#videos" class="btn btn-warning btn-lg rounded-pill mt-4 px-5 fw-bold">开始学习</a>
@@ -894,8 +921,10 @@
 </div>
 
 <script src="https://cdn.staticfile.org/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
 <script>
+
   // -------------------------
   // 视频数据
   // -------------------------
@@ -1051,6 +1080,85 @@
 
     // 游戏按钮
     renderGameButtons();
+  });
+  // 通用粒子初始化函数
+  function initParticles(elementId, color, opacity = 0.8, number = 200) {
+    particlesJS(elementId, {
+      "particles": {
+        "number": {
+          "value": number,          // 粒子数量大幅增加
+          "density": {
+            "enable": true,
+            "value_area": 600     // 密度更高（数值越小越密集）
+          }
+        },
+        "color": { "value": color },
+        "shape": { "type": "circle" },
+        "opacity": {
+          "value": opacity,
+          "random": true,
+          "anim": {                 // 新增：透明度动画，更灵动
+            "enable": true,
+            "speed": 1,
+            "opacity_min": 0.2,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,               // 基础尺寸增大
+          "random": true,           // 大小随机
+          "anim": {                 // 新增：大小动画
+            "enable": true,
+            "speed": 2,
+            "size_min": 0.5,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,           // 开启粒子连线（科技感更强）
+          "distance": 150,          // 连线距离
+          "color": color,           // 连线颜色匹配粒子
+          "opacity": 0.2,           // 连线透明度
+          "width": 1                // 连线宽度
+        },
+        "move": {
+          "enable": true,
+          "speed": 0.5,             // 速度稍快，更活泼
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"        // 悬停时粒子吸附（替代repulse，效果更好）
+          },
+          "onclick": { "enable": true, "mode": "push" } // 点击新增粒子
+        },
+        "modes": {
+          "grab": { "distance": 200, "line_linked": { "opacity": 0.5 } },
+          "push": { "particles_nb": 4 } // 点击新增4个粒子
+        }
+      },
+      "retina_detect": true
+    });
+  }
+
+  // 初始化
+  document.addEventListener('DOMContentLoaded', () => {
+    renderVideos();
+    renderGameButtons();
+
+    // 初始化各个区域的粒子效果（优化版 - 更多粒子）
+    initParticles("heroParticles", "#ffffff", 0.8, 250);      // 首页 - 白色粒子（250个）
+    // initParticles("videosParticles", "#4A90E2", 0.7, 200);   // 视频区 - 蓝色粒子（200个）
+    // initParticles("aboutParticles", "#7ED321", 0.6, 180);    // 关于区 - 绿色粒子（180个）
+    // initParticles("gamesParticles", "#FFCE00", 0.7, 220);    // 游戏区 - 黄色粒子（220个）
   });
 </script>
 
