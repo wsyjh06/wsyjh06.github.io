@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f8bbd0">
+<title>🎁 莎酱的礼物抽选</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-bg-start: #fce4ec;
+  --color-bg-mid: #f8bbd0;
+  --color-bg-end: #e1bee7;
+  --color-card: rgba(255,255,255,0.82);
+  --color-card-border: rgba(255,255,255,0.55);
+  --color-accent: #e91e63;
+  --color-accent-soft: #f06292;
+  --color-gold: #f9a825;
+  --color-gold-light: #ffd54f;
+  --color-text: #4a2c3a;
+  --color-text-soft: #7b5e6b;
+  --color-heart: #ff4081;
+  --shadow-card: 0 8px 40px rgba(233,30,99,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-elevated: 0 20px 60px rgba(233,30,99,0.18), 0 4px 16px rgba(0,0,0,0.08);
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
+  --font-display: 'ZCOOL KuaiLe', 'Noto Sans SC', system-ui, sans-serif;
+  --font-body: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: linear-gradient(160deg, var(--color-bg-start) 0%, var(--color-bg-mid) 40%, var(--color-bg-end) 100%);
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── floating particles ── */
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  animation: floatUp linear infinite;
+  opacity: 0;
+  font-size: 22px;
+  filter: blur(0.5px);
+}
+@keyframes floatUp {
+  0%   { transform: translateY(105vh) scale(0.4) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.7; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(-15vh) scale(1.1) rotate(25deg); opacity: 0; }
+}
+
+/* ── main container ── */
+.main {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 440px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 0;
+}
+
+/* ── card ── */
+.card {
+  width: 100%;
+  background: var(--color-card);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 40px 28px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* ── typography ── */
+.greeting {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 5.5vw, 30px);
+  color: var(--color-accent);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+.greeting .name {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-accent), #d81b60);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.15em;
+  font-weight: 700;
+}
+.subtitle {
+  font-size: 14px;
+  color: var(--color-text-soft);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+.divider {
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-gold-light), var(--color-accent-soft));
+  margin: 16px 0;
+  opacity: 0.7;
+}
+
+/* ── button ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 200px;
+  min-height: 52px;
+  padding: 14px 36px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent-soft), var(--color-accent));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(233,30,99,0.32);
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  border-radius: 50px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.btn:hover::after { opacity: 1; }
+.btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 32px rgba(233,30,99,0.42);
+}
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 3px 12px rgba(233,30,99,0.28);
+  transition: all 0.1s ease;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 3px 12px rgba(233,30,99,0.18);
+}
+.btn .sparkle {
+  display: inline-block;
+  animation: sparkle 0.8s ease-in-out infinite alternate;
+}
+@keyframes sparkle {
+  0% { transform: scale(0.85) rotate(-5deg); }
+  100% { transform: scale(1.1) rotate(5deg); }
+}
+
+/* ── prize cards (draw stage) ── */
+.prize-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+.prize-card {
+  aspect-ratio: 3 / 4;
+  perspective: 800px;
+  cursor: default;
+}
+.prize-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  transform-style: preserve-3d;
+}
+.prize-card.revealed .prize-card-inner {
+  transform: rotateY(180deg);
+}
+.prize-card-front,
+.prize-card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.prize-card-front {
+  background: linear-gradient(145deg, #fff5f7, #fce4ec);
+  border: 2px dashed var(--color-accent-soft);
+  box-shadow: 0 4px 16px rgba(233,30,99,0.1);
+  font-size: 28px;
+}
+.prize-card-back {
+  background: linear-gradient(145deg, #fff9f0, #fff3e0);
+  border: 2px solid var(--color-gold-light);
+  box-shadow: 0 4px 20px rgba(249,168,37,0.2);
+  font-family: var(--font-display);
+  font-size: clamp(13px, 3.2vw, 16px);
+  color: var(--color-accent);
+  padding: 12px 8px;
+  transform: rotateY(180deg);
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.4;
+}
+.prize-card-back .prize-emoji {
+  font-size: 34px;
+  margin-bottom: 4px;
+}
+.prize-card.shuffling .prize-card-inner {
+  animation: cardShuffle 0.4s ease-in-out infinite;
+}
+@keyframes cardShuffle {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  25%  { transform: translateY(-8px) rotate(-3deg); }
+  75%  { transform: translateY(4px) rotate(2deg); }
+}
+
+/* ── selected card highlight ── */
+.prize-card.winner {
+  position: relative;
+  z-index: 2;
+}
+.prize-card.winner::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--color-gold-light), #ffab00, var(--color-gold-light));
+  background-size: 200% 200%;
+  animation: borderGlow 1.5s ease-in-out infinite;
+  z-index: -1;
+}
+@keyframes borderGlow {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── result display ── */
+.result-section {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.result-section.active { display: flex; }
+.result-badge {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 6.5vw, 36px);
+  color: var(--color-accent);
+  animation: resultBounce 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center;
+  line-height: 1.5;
+}
+@keyframes resultBounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.result-emoji {
+  font-size: 64px;
+  animation: emojiPop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes emojiPop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ── confetti canvas ── */
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── share hint ── */
+.share-hint {
+  font-size: 12px;
+  color: var(--color-text-soft);
+  opacity: 0.7;
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+/* ── responsive ── */
+@media (max-width: 380px) {
+  .card { padding: 32px 18px 28px; }
+  .prize-grid { gap: 10px; }
+  .btn { min-width: 170px; font-size: 18px; padding: 12px 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- floating particles -->
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<!-- confetti canvas -->
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- main -->
+<main class="main" id="mainStage">
+
+  <!-- welcome card -->
+  <div class="card" id="welcomeCard">
+    <p class="greeting">
+      欢迎<br>
+      <span class="name">美丽漂亮可爱动人的莎酱</span><br>
+      来抽奖 ✨
+    </p>
+    <div class="divider"></div>
+    <p class="subtitle">🎁 点击下方按钮，抽取你的专属礼物</p>
+    <button class="btn" id="drawBtn" onclick="startDraw()">
+      <span class="sparkle">🎀</span> 开始抽奖 <span class="sparkle">🎀</span>
+    </button>
+  </div>
+
+  <!-- draw stage (hidden initially) -->
+  <div class="card" id="drawCard" style="display:none;">
+    <p class="greeting" style="font-size:clamp(18px,4.5vw,22px);">🎰 礼物正在洗牌中...</p>
+    <div class="divider"></div>
+    <div class="prize-grid" id="prizeGrid"></div>
+  </div>
+
+  <!-- result stage (hidden initially) -->
+  <div class="card result-section" id="resultCard">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-badge" id="resultText"></div>
+    <div class="divider"></div>
+    <button class="btn" onclick="resetDraw()">
+      🔄 再抽一次
+    </button>
+    <p class="share-hint">📋 长按截图分享给你的朋友吧~</p>
+  </div>
+
+</main>
+
+<script>
+// ── data ──
+const prizes = [
+  { name: '电影票一张', emoji: '🎬', color: '#e91e63', desc: '一起去看一场电影吧~' },
+  { name: '饭票一张',   emoji: '🍽️', color: '#ff6f00', desc: '请你吃一顿大餐！' },
+  { name: '奶茶票一张', emoji: '🧋', color: '#8d6e63', desc: '甜甜的奶茶给你~' },
+  { name: '随机完成限定愿望', emoji: '🌟', color: '#f9a825', desc: '你的一个小愿望，我来实现！' },
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── particle system ──
+(function initParticles() {
+  const container = document.getElementById('particles');
+  const shapes = ['✨','💖','🌸','🌟','🎀','💫','🩷','💝','🌷','🎈','💎','🦋'];
+  for (let i = 0; i < 22; i++) {
+    const el = document.createElement('span');
+    el.className = 'particle';
+    el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+    el.style.left = Math.random() * 95 + '%';
+    el.style.animationDuration = (8 + Math.random() * 14) + 's';
+    el.style.animationDelay = Math.random() * 10 + 's';
+    el.style.fontSize = (16 + Math.random() * 28) + 'px';
+    container.appendChild(el);
+  }
+})();
+
+// ── confetti ──
+let confettiActive = false;
+function fireConfetti() {
+  if (confettiActive) return;
+  confettiActive = true;
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#e91e63','#f06292','#f48fb1','#f9a825','#ffd54f','#fff176','#ce93d8','#ba68c8','#ff4081','#ff80ab','#ffab40','#80deea'];
+  const pieces = [];
+  for (let i = 0; i < 150; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * -1,
+      w: 6 + Math.random() * 10,
+      h: 4 + Math.random() * 8,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 4,
+      vy: 2 + Math.random() * 5,
+      r: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.15,
+      opacity: 1,
+    });
+  }
+
+  let frame = 0;
+  const maxFrames = 180;
+  function draw() {
+    if (frame >= maxFrames) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiActive = false;
+      return;
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+      p.vy += 0.04;
+      if (frame > maxFrames - 50) p.opacity = Math.max(0, p.opacity - 0.02);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── draw logic ──
+let isDrawing = false;
+
+function startDraw() {
+  if (isDrawing) return;
+  isDrawing = true;
+
+  const welcomeCard = document.getElementById('welcomeCard');
+  const drawCard = document.getElementById('drawCard');
+  const resultCard = document.getElementById('resultCard');
+  const drawBtn = document.getElementById('drawBtn');
+  const prizeGrid = document.getElementById('prizeGrid');
+
+  // reset
+  resultCard.classList.remove('active');
+  drawBtn.disabled = true;
+  welcomeCard.style.display = 'none';
+  drawCard.style.display = '';
+  prizeGrid.innerHTML = '';
+
+  // pick winner
+  const shuffled = shuffle(prizes);
+  const winnerIdx = Math.floor(Math.random() * shuffled.length);
+  const winner = shuffled[winnerIdx];
+
+  // render shuffled cards (face down)
+  shuffled.forEach((prize, i) => {
+    const cardEl = document.createElement('div');
+    cardEl.className = 'prize-card shuffling';
+    if (i === winnerIdx) cardEl.classList.add('winner-target');
+    cardEl.innerHTML = `
+      <div class="prize-card-inner">
+        <div class="prize-card-front">🎁</div>
+        <div class="prize-card-back">
+          <span class="prize-emoji">${prize.emoji}</span>
+          <span>${prize.name}</span>
+        </div>
+      </div>`;
+    prizeGrid.appendChild(cardEl);
+  });
+
+  // shuffle phase ~2s
+  setTimeout(() => {
+    // stop shuffling
+    document.querySelectorAll('.prize-card').forEach(c => c.classList.remove('shuffling'));
+  }, 1800);
+
+  // reveal phase ~3.5s
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.prize-card');
+    cards.forEach((card, i) => {
+      if (i === winnerIdx) {
+        card.classList.add('winner', 'revealed');
+      } else {
+        // fade out non-winners
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.85)';
+      }
+    });
+  }, 2200);
+
+  // show result ~4s
+  setTimeout(() => {
+    drawCard.style.display = 'none';
+    document.getElementById('resultEmoji').textContent = winner.emoji;
+    document.getElementById('resultText').textContent = winner.name;
+    if (winner.desc) {
+      document.getElementById('resultText').innerHTML = `${winner.name}<br><small style="font-size:0.55em;color:var(--color-text-soft);font-family:var(--font-body);">${winner.desc}</small>`;
+    }
+    resultCard.classList.add('active');
+    fireConfetti();
+    isDrawing = false;
+  }, 3200);
+}
+
+function resetDraw() {
+  const welcomeCard = document.getElementById('welcomeCard');
+  const drawCard = document.getElementById('drawCard');
+  const resultCard = document.getElementById('resultCard');
+  const drawBtn = document.getElementById('drawBtn');
+  resultCard.classList.remove('active');
+  drawCard.style.display = 'none';
+  welcomeCard.style.display = '';
+  drawBtn.disabled = false;
+  confettiActive = false;
+}
+
+// responsive canvas
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('confetti');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
